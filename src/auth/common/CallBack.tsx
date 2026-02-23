@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { CALLBACK_URI, ROOT_API_URL } from "../shared/Constant";
+import { CALLBACK_URI, ROOT_API_URL } from "../../shared/Constant";
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 
@@ -11,7 +11,7 @@ const CallBack = () => {
     const code = urlParams.get("code");
     const controller = new AbortController();
     const signal = controller.signal;
-
+    
     if (!code) {
       navigate("/login");
       return;
@@ -19,17 +19,22 @@ const CallBack = () => {
 
     const handleCallback = async () => {
       try {
+        
         const res = await axios.get(
           `${ROOT_API_URL}/${CALLBACK_URI}?code=${encodeURIComponent(code)}`,{signal}
         );
 
-        if(signal.aborted ) {return;}
-        
         axios.defaults.headers.common["Authorization"] =`Bearer ${res.data}`;
+        alert("success");
 
         navigate("/");
-      } catch{
-        if(signal.aborted){return;}
+      } catch(err){
+        const error = err as AxiosError
+
+        if (error.name === "AbortError" ||error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+          return;
+        }
+
         navigate("/login");
       }
     };
