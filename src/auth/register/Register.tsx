@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AccountType } from '../../types/AccountType';
 import { 
   type UniqueDetail, 
   handleRegister, 
   checkUniqueField 
 } from './RegsiterService';
-import { handleChangeForUniqueDetails } from "../../utils/util";
+import _ from "lodash";
+import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/util";
 
 
 const Register = () => {
@@ -20,6 +21,27 @@ const Register = () => {
   })
   const [accountType, setAccountType] = useState(AccountType.PERSONAL);
 
+  const debouncedCheckUniqueField = useMemo(
+    () => _.debounce(async (name: string, value: string) => {
+      let exists = false;
+      try {
+        exists = await checkUniqueField(name, value);
+      } catch (err) {
+        console.error('Error checking unique field:', err);
+      }finally{
+        handleChangeExistsForUniqueDetails(setUniqueDetails, name ,exists);
+      }
+    }, 750),
+    []
+  );
+
+  // Cleanup: cancel pending debounced calls on unmount
+  useEffect(() => {
+    return () => {
+      debouncedCheckUniqueField.cancel();
+    };
+  }, [debouncedCheckUniqueField]);
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -32,17 +54,14 @@ const Register = () => {
     }
   }
 
-  const handleCheckUniqueDetails = async (e : React.ChangeEvent<HTMLInputElement>) =>{
-    const {name , value}  = e.target;
-    let exists = false;
-  
-    try {
-      exists = await checkUniqueField(name, value);
-    } catch (err) {
-      console.error('Error checking unique field:', err);
-    } finally {
-      handleChangeForUniqueDetails(setUniqueDetails, name, value, exists);
-    }
+  const handleChangeUniqueDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    // Immediately update the input value (without exists check)
+    handleChangeValueForUniqueDetails(setUniqueDetails, name, value);
+    
+    // Debounce the API call - waits 1 second after user stops typing
+    debouncedCheckUniqueField(name, value);
   }
 
   return (
@@ -80,7 +99,7 @@ const Register = () => {
       name="username"
       placeholder="Username"
       value={UniqueDetails.username.value}
-      onChange={handleCheckUniqueDetails}
+      onChange={handleChangeUniqueDetails}
       required
       />
     </label>
@@ -93,26 +112,26 @@ const Register = () => {
     />
 
     <label>
-      {(UniqueDetails.email.exists && UniqueDetails.email) && <p style={{color : "red"}}>existed email</p>}
-      {(!UniqueDetails.email.exists && UniqueDetails.email) && <p style={{color : "green"}}>available email</p>}
+      {(UniqueDetails.email.exists && UniqueDetails.email.value) && <p style={{color : "red"}}>existed email</p>}
+      {(!UniqueDetails.email.exists && UniqueDetails.email.value) && <p style={{color : "green"}}>available email</p>}
       <input
         type="email"
         name="email"
         placeholder="Email"
         value={UniqueDetails.email.value}
-        onChange={handleCheckUniqueDetails}
+        onChange={handleChangeUniqueDetails}
         required
       />
     </label>
 
     <label>
-      {(UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber) && <p style={{color : "red"}}>existed phone number</p>}
-      {(!UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber) && <p style={{color : "green"}}>available phone number</p>}
+      {(UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber.value) && <p style={{color : "red"}}>existed phone number</p>}
+      {(!UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber.value) && <p style={{color : "green"}}>available phone number</p>}
       <input
         name="phoneNumber"
         placeholder="Phone Number"
         value={UniqueDetails.phoneNumber.value}
-        onChange={handleCheckUniqueDetails}
+        onChange={handleChangeUniqueDetails}
         required
       />
     </label>
@@ -145,8 +164,8 @@ const Register = () => {
         
 
         <label>
-          {(UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber) && <p style={{color : "red"}}>existed ID card number</p>}
-          {(!UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber) && <p style={{color : "green"}}>available ID card number</p>}
+          {(UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber.value) && <p style={{color : "red"}}>existed ID card number</p>}
+          {(!UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber.value) && <p style={{color : "green"}}>available ID card number</p>}
           <input
             type="text"
             id="idCardNumber"
@@ -154,7 +173,7 @@ const Register = () => {
             placeholder="Id card number"
             pattern="[0-9]{9,12}"
             value={UniqueDetails.idCardNumber.value}
-            onChange={handleCheckUniqueDetails}
+            onChange={handleChangeUniqueDetails}
             required
           />
         </label>
@@ -184,15 +203,15 @@ const Register = () => {
         />
 
         <label>
-          {(UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber) && <p style={{color : "red"}}>existed tax ID number</p>}
-          {(!UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber) && <p style={{color : "green"}}>available tax ID number</p>}
+          {(UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber.value) && <p style={{color : "red"}}>existed tax ID number</p>}
+          {(!UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber.value) && <p style={{color : "green"}}>available tax ID number</p>}
           <input
             type="text"
             id="taxIdNumber"
             name="taxIdNumber"
             placeholder="Tax ID number"
             value={UniqueDetails.taxIdNumber.value}
-            onChange={handleCheckUniqueDetails}
+            onChange={handleChangeUniqueDetails}
             required
           />
         </label>

@@ -11,21 +11,38 @@ export const handleChange = <T extends Record<string, unknown>>(
       }));
 };
 
-export const handleChangeForUniqueDetails = <T extends Record<string, UniqueDetailObj>>(
+export const handleChangeValueForUniqueDetails = <T extends Record<string, UniqueDetailObj>>(
   setUniqueDetails: React.Dispatch<React.SetStateAction<T>>,
   name: string,
   value: string,
-  exists: boolean
 ) => {
   setUniqueDetails(prev => ({
     ...prev,
     [name]: {
       ...prev[name],
       value,
-      exists
     }
   }));
 };
+
+export const handleChangeExistsForUniqueDetails = <T extends Record<string, UniqueDetailObj>>(
+  setUniqueDetails: React.Dispatch<React.SetStateAction<T>>,
+  name: string,
+  exists: boolean,
+) => {
+  setUniqueDetails(prev => ({
+    ...prev,
+    [name]: {
+      ...prev[name],
+      exists,
+    }
+  }));
+};
+
+export const trimObjectValues = (obj : Record<string,unknown>) => {
+  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value]));
+};
+
 export const toKebab = (str: string) =>
   str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 

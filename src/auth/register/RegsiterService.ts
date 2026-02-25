@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { AccountType } from "../../types/AccountType";
 import { ROOT_API_URL } from "../../shared/Constant";
-import { toKebab } from "../../utils/util";
+import { toKebab, trimObjectValues } from "../../utils/util";
 import { type UniqueDetailObj } from "../../types/UniqueDetailObj";
 
 // Types
@@ -28,8 +28,8 @@ export const handleRegister = async (
   formData: FormData
 ): Promise<string> => {
   const correspondingApi = apiMap[accountType];
-  const data = Object.fromEntries(formData.entries());
-  
+  const rawData = Object.fromEntries(formData.entries());
+  const data = trimObjectValues(rawData);
   try {
     const res = await axios.post(`${ROOT_API_URL}/v1/${correspondingApi}`, data);
     return res.data;
@@ -50,9 +50,11 @@ export const checkUniqueField = async (
   const correspondingApi: string = uniqueDetailsMap[fieldName as keyof typeof uniqueDetailsMap];
 
   try {
+    
     const exists: boolean = (
       await axios.get(`${ROOT_API_URL}/v1/${correspondingApi}/exists/${toKebab(fieldName)}/${value}`)
     ).data;
+    
     return exists;
   } catch (err) {
     const error = err as AxiosError;
