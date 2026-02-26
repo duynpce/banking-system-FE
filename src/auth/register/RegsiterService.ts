@@ -1,8 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { AccountType } from "../../types/AccountType";
 import { ROOT_API_URL } from "../../shared/Constant";
-import { toKebab, trimObjectValues } from "../../utils/util";
+import {  trimObjectValues } from "../../utils/Util";
 import { type UniqueDetailObj } from "../../types/UniqueDetailObj";
+import _ from "lodash";
 
 // Types
 export type UniqueField = "username" | "email" | "phoneNumber" | "idCardNumber" | "taxIdNumber";
@@ -52,7 +53,7 @@ export const checkUniqueField = async (
   try {
     
     const exists: boolean = (
-      await axios.get(`${ROOT_API_URL}/v1/${correspondingApi}/exists/${toKebab(fieldName)}/${value}`)
+      await axios.get(`${ROOT_API_URL}/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
     ).data;
     
     return exists;

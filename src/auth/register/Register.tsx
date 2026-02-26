@@ -6,7 +6,7 @@ import {
   checkUniqueField 
 } from './RegsiterService';
 import _ from "lodash";
-import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/util";
+import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/Util";
 
 
 const Register = () => {

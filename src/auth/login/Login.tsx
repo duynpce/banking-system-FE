@@ -1,6 +1,7 @@
-import {  useEffect, useRef } from "react";
+import {     useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ROOT_API_URL } from "../../shared/Constant";
+import { getErrorMessage } from "./LoginService";
 
 const Login = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -12,17 +13,6 @@ const Login = () => {
       usernameRef.current.value = savedUsername;
     }
   }, []);
-
-const getErrorMessage = (error: string | null): string => {
-    if (!error) return "";
-    if (error === "invalid-credentials") {
-      return "Not existed account or incorrect password";
-    } else if (error === "authentication-failed") {
-      return "Authentication failed";
-    } else {
-      return "unknown error";
-    }
-  };
 
   const message = getErrorMessage(searchParams.get("error"));
 

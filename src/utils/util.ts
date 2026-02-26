@@ -43,7 +43,4 @@ export const trimObjectValues = (obj : Record<string,unknown>) => {
   return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value]));
 };
 
-export const toKebab = (str: string) =>
-  str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-
 
