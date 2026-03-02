@@ -1,5 +1,5 @@
 import {  expect, test , describe} from "vitest";
-import { getErrorMessage } from '../../src/auth/login/LoginService';
+import { getErrorMessage } from '../../../src/auth/login/LoginService';
 
 
 describe("test getErrorMessage", () => {

@@ -1,10 +1,11 @@
 
 export const ROOT_API_URL = import.meta.env.VITE_ROOT_API_URL;
 export const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-export const CALLBACK_URI = import.meta.env.VITE_CALLBACK_URI;
-export const AUTHORIZE_URI = import.meta.env.VITE_AUTHORIZE_URI;
-export const TOKEN_URI = import.meta.env.VITE_TOKEN_URI;
-export const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+export const CALLBACK_URL = import.meta.env.VITE_CALLBACK_URL
+export const AUTHORIZE_URL = import.meta.env.VITE_AUTHORIZE_URL;
+export const TOKEN_URL = import.meta.env.VITE_TOKEN_URL;
+export const ROOT_URL = import.meta.env.VITE_ROOT_URL;
+
 export const SCOPE_READ = "api:read";
 export const SCOPE_WRITE = "api:write";
 export const SCOPE_READ_SELF = "openid";

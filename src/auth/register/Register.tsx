@@ -60,7 +60,7 @@ const Register = () => {
     // Immediately update the input value (without exists check)
     handleChangeValueForUniqueDetails(setUniqueDetails, name, value);
     
-    // Debounce the API call - waits 1 second after user stops typing
+    // Debounce the API call - waits 0.75 second after user stops typing
     debouncedCheckUniqueField(name, value);
   }
 
@@ -181,6 +181,7 @@ const Register = () => {
         <select
           id="gender"
           name="gender"
+          aria-label="gender"
           required
         >
           <option value="">Chose gender</option>

@@ -1,0 +1,86 @@
+/// to - do : implement e2e instead of it test , to test the whole flow of login and callback redirection , and also test the error handling in case of failed login
+
+
+// import { describe, test, expect, beforeAll, afterEach, afterAll } from "vitest";
+// import userEvent from "@testing-library/user-event";
+// import { render, screen, waitFor } from '@testing-library/react';
+// import { MemoryRouter, Route, Routes } from 'react-router-dom';
+// import { http, HttpResponse } from 'msw';
+// import { setupServer } from 'msw/node';
+// import Login from '../../../src/auth/login/Login';
+// import { ROOT_API_URL } from "../../../src/shared/Constant";
+
+// const user = userEvent.setup();
+
+// // Setup MSW server
+// const server = setupServer(
+//   http.post(`${ROOT_API_URL}/login`, async ({ request }) => {
+//     const formData = await request.formData();
+//     const username = formData.get('username');
+//     const password = formData.get('password');
+    
+//     // Simulate successful login
+//     if (username === "valid_user" && password === "valid_password") {
+//       return HttpResponse.json({ message: "Login successful" }, { status: 200 });
+//     }else {
+//       return HttpResponse.json({ message: "Invalid credentials" }, { status: 401 });
+
+//     }
+//   })
+// );
+
+// beforeAll(() => server.listen());
+// afterEach(() => {
+//   server.resetHandlers();
+// });
+// afterAll(() => server.close());
+
+// describe("test login", () => {
+//   test(" success , should redirect to callback", async () => {
+//     render(
+//       <MemoryRouter initialEntries={["/login"]}>
+//         <Routes>
+//           <Route path="/login" element={<Login/>}/>
+//           <Route> </Route>
+//         </Routes>
+//       </MemoryRouter>
+//     );
+
+//     const usernameInput = screen.getByPlaceholderText("username");
+//     const passwordInput = screen.getByPlaceholderText("password");
+//     const loginButton = screen.getByText("Login");
+
+//     await user.type(usernameInput, "valid_user");
+//     await user.type(passwordInput, "valid_password");
+//     await user.click(loginButton);
+
+//     // Wait for the API call to complete and assert the response
+//     await waitFor(() => {
+//       expect(screen.getByText("Login successful")).toBeInTheDocument();
+//     });
+    
+//   })
+
+//   test(" failure , should show error message", async () => {
+//     render(
+//       <MemoryRouter initialEntries={["/login"]}>
+//         <Routes>
+//           <Route path="/login" element={<Login/>}/>
+//         </Routes>
+//       </MemoryRouter>
+//     );
+
+//     const usernameInput = screen.getByPlaceholderText("username");
+//     const passwordInput = screen.getByPlaceholderText("password");
+//     const loginButton = screen.getByText("Login");
+
+//     await user.type(usernameInput, "invalid_user");
+//     await user.type(passwordInput, "invalid_password");
+//     await user.click(loginButton);
+
+//     // Wait for the API call to complete and assert the response
+//     await waitFor(() => {
+//       expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
+//     });
+//   })
+// })
