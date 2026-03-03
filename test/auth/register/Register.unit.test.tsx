@@ -70,3 +70,7 @@ describe("test checkUniqueField", () => {
 
   })
 })
+
+test ("should failed to test CI" , async () => {
+  expect(true).toEqual(false);
+})
