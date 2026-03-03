@@ -22,7 +22,6 @@ type personalAccountRequestBody = {
 }
 
 server.use(http.post(`${ROOT_API_URL}/v1/personal-accounts`,async ({request}) => {
-  console.error("post called");
   const body = await request.json() as personalAccountRequestBody;
   if (body.username?.includes("valid")){
     return new Response(JSON.stringify("registered successfully"), { status: 200 });
@@ -31,9 +30,7 @@ server.use(http.post(`${ROOT_API_URL}/v1/personal-accounts`,async ({request}) =>
   }
 }));
 
-server.use(http.get(`${ROOT_API_URL}/v1/*/exists/*/:value`, async ({ request ,params}) => {
-  console.error("get called with value: ", params.value);
-  console.error("request url: ", request.url);
+server.use(http.get(`${ROOT_API_URL}/v1/*/exists/*/:value`, async ({ params}) => {
   if (params.value?.includes("existed")) {
     return new Response(JSON.stringify(true), { status: 200 });
   } else{

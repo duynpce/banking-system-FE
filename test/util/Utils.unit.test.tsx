@@ -1,5 +1,5 @@
 
-import { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 import {  expect, test, vi } from "vitest";
 import { handleChange, handleChangeValueForUniqueDetails, handleChangeExistsForUniqueDetails, trimObjectValues } from '../../src/utils/Util';
 
