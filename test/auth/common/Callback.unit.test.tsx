@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { describe, expect, test, vi } from 'vitest';
-import { handleCallback } from '../../../src/auth/common/CallBackService';
+import { handleCallback } from '../../../src/auth/common/callback.service';
 
 vi.mock("axios");
 const mockedAxios = vi.mocked(axios, true);

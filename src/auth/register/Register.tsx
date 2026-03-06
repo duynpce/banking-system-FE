@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { AccountType } from '../../types/AccountType';
+import { AccountType } from '../../types/account.type';
 import { 
   type UniqueDetail, 
   handleRegister, 
   checkUniqueField 
-} from './RegsiterService';
+} from './register.service';
 import _ from "lodash";
-import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/Util";
+import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/util";
 
 
 const Register = () => {

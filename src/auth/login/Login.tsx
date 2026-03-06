@@ -1,7 +1,7 @@
 import {     useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ROOT_API_URL } from "../../shared/constant/Constant";
-import { getErrorMessage } from "./LoginService";
+import { ROOT_API_URL } from "../../shared/constant/constant";
+import { getErrorMessage } from "./login.service";
 
 const Login = () => {
   const usernameRef = useRef<HTMLInputElement>(null);

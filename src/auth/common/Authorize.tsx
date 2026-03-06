@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AUTHORIZE_URL, CLIENT_ID, ROOT_API_URL, ROOT_URL, SCOPE_READ } from "../../shared/constant/Constant";
+import { AUTHORIZE_URL, CLIENT_ID, ROOT_API_URL, ROOT_URL, SCOPE_READ } from "../../shared/constant/constant";
 
 const Authorize = () => {
 

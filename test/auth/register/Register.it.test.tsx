@@ -1,5 +1,5 @@
-import { server } from '../../mocks/Server';
-import { ROOT_API_URL } from '../../../src/shared/constant/Constant';
+import { server } from '../../mocks/server';
+import { ROOT_API_URL } from '../../../src/shared/constant/constant';
 import { delay, http } from 'msw';
 import { describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom';

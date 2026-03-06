@@ -20,19 +20,19 @@ const Layout = () => {
         <Link to="/dashboard/settings">Settings</Link>
       </aside>
 
-      <div className="col-span-9 flex flex-col border border-gray-300">
+      <section className="col-span-9 flex flex-col border border-gray-300">
 
-        <search className="col-span-full grid grid-cols-12 h-20 content-center items-center">
+        <header className="col-span-full grid grid-cols-12 h-20 content-center items-center">
           <h1 className="col-span-6 top-1/2 pl-4 text-3xl" >{dashBoardName}</h1>
           <SearchBar placeHolder="Search for something" className="col-span-3" />
           
-        </search>
+        </header>
 
         <main className="flex-1 bg-gray-100 rounded-lg">
           <Outlet />
         </main>
 
-      </div>
+      </section>
     </div>
   );
 }

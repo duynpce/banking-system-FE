@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
+import { AccountType } from "../../types/account.type";
 import {  trimObjectValues } from "../../utils/util";
 import { api } from "../../utils/api";
+import { type UniqueDetailObj } from "../../types/unique-detail.type";
 import _ from "lodash";
-import type { UniqueDetailObj } from "../../types/unique-detail.type";
-import { AccountType } from "../../types/account.type";
 
 // Types
 export type UniqueField = "username" | "email" | "phoneNumber" | "idCardNumber" | "taxIdNumber";

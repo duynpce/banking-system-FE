@@ -1,5 +1,5 @@
 import React from 'react';
-import type { UniqueDetailObj } from '../types/UniqueDetailObj';
+import type { UniqueDetailObj } from '../types/unique-detail.type';
 
 export const handleChange = <T extends Record<string, unknown>>(
   setState: React.Dispatch<React.SetStateAction<T>>) =>

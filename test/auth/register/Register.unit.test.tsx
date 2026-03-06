@@ -1,7 +1,7 @@
 import {  expect, test , describe, vi} from "vitest";
 import axios, { AxiosError } from "axios";
-import { handleRegister, checkUniqueField } from '../../../src/auth/register/RegsiterService';
-import { AccountType } from "../../../src/types/AccountType";
+import { handleRegister, checkUniqueField } from '../../../src/auth/register/register.service';
+import { AccountType } from "../../../src/types/account.type";
 
 vi.mock("axios");
 const mockedAxios = vi.mocked(axios,true);

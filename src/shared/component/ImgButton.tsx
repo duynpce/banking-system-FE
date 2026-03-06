@@ -1,8 +1,13 @@
-import type { ImgButtonProps } from "../../types/ImgButtonProps";
+import clsx from "clsx";
+
+type ImgButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  src: string;
+  alt: string;
+};
 
 const ImgButton = ({ src, alt, className, ...props }: ImgButtonProps) => {
   return (
-    <button className={className} {...props}>
+    <button className={clsx("cursor-pointer", className)} {...props}>
       <img src={src} alt={alt} className="w-full h-full" />
     </button>
   );

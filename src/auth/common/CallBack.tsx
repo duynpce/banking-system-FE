@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { handleCallback } from "./CallBackService";
+import { handleCallback } from "./callback.service";
 
 const CallBack = () => {
   const navigate = useNavigate();
