@@ -5,7 +5,7 @@ name: CI for react project
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feat/*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,7 +28,7 @@ jobs:
       env: 
         VITE_ROOT_API_URL: "${{ secrets.VITE_ROOT_API_URL }}"
         VITE_CLIENT_ID : "${{ secrets.VITE_CLIENT_ID }}"
-        VITE_CALLBACK_URL : "${{ secrets.VITE_CALLBACK_URI }}"
+        VITE_CALLBACK_URL : "${{ secrets.VITE_CALLBACK_URL }}"
         VITE_AUTHORIZE_URL : "${{ secrets.VITE_AUTHORIZE_URL }}"
         VITE_TOKEN_URL : "${{ secrets.VITE_TOKEN_URL }}"
         VITE_ROOT_URL : "${{ secrets.VITE_ROOT_URL }}"

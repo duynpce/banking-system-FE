@@ -1,6 +1,6 @@
 import {     useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ROOT_API_URL } from "../../shared/Constant";
+import { ROOT_API_URL } from "../../shared/constant/Constant";
 import { getErrorMessage } from "./LoginService";
 
 const Login = () => {

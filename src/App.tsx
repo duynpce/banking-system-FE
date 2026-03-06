@@ -5,6 +5,8 @@ import Home from "./home/Home";
 import CallBack from "./auth/common/CallBack";
 import Authorize from "./auth/common/Authorize";
 import Register from "./auth/register/Register";
+import OverView from "./customer/dashboard/OverView";
+import Layout from "./customer/dashboard/Layout";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +16,9 @@ function App() {
         <Route path="/callback" element={<CallBack/>}/>
         <Route path="/authorize" element={<Authorize/>}/>
         <Route path="/register" element={<Register/>}/>
+        <Route path="/dashboard" element={<Layout/>}>
+          <Route path="overview" element={<OverView/>} />
+        </Route>
       </Routes>
       
     </BrowserRouter>

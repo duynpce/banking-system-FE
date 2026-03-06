@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { AccountType } from "../../types/AccountType";
-import { ROOT_API_URL } from "../../shared/Constant";
+import { ROOT_API_URL } from "../../shared/constant/Constant";
 import {  trimObjectValues } from "../../utils/Util";
 import { type UniqueDetailObj } from "../../types/UniqueDetailObj";
 import _ from "lodash";

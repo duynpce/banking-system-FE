@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { ROOT_API_URL, CALLBACK_URL } from "../../shared/Constant";
+import { ROOT_API_URL, CALLBACK_URL } from "../../shared/constant/Constant";
 import type { NavigateFunction } from "react-router-dom";
 
   export const handleCallback = async (code : string, navigate: NavigateFunction, signal: AbortSignal) => {

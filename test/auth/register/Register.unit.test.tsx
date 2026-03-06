@@ -69,8 +69,4 @@ describe("test checkUniqueField", () => {
     expect(mockedAxios.get).toBeCalledTimes(1);
 
   })
-})
-
-test ("should failed to test CI" , async () => {
-  expect(true).toEqual(false);
-})
+})  
