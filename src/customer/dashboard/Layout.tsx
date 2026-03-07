@@ -9,7 +9,9 @@ const Layout = () => {
     <div className="grid grid-cols-12">
 
       <aside className="col-span-3 flex flex-col p-4 gap-4 border border-gray-300 text-gray-700">
-        PDBankDashBoard
+        <Link to="/" className="text-xl font-bold">
+          PDBank
+        </Link>
         <Link to="/dashboard/overview">Overview</Link>
         <Link to="/dashboard/transactions">Transactions</Link>
         <Link to="/dashboard/accounts">Accounts</Link>

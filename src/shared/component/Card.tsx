@@ -9,8 +9,8 @@ type CardProps = {
 const Card = ({ title, className, innerClassName, children, ...props }: CardProps) => {
   return (
     <div className={clsx(className)} {...props}>
-      <h1 className="text-xl mb-3">{title}</h1>
-      <div className={clsx("p-4 rounded-3xl", innerClassName)}>
+      <h1 className="h-1/5 text-xl ">{title}</h1>
+      <div className={clsx("h-4/5 p-4 rounded-3xl", innerClassName)}>
         {children}
       </div>
     </div>
