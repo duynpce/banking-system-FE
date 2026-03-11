@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import SearchBar from '../../shared/component/SearchBar';
 
-const Layout = () => {
+const CustomerDashboardLayOut = () => {
    const location = useLocation();
   
   const dashBoardName =  location.pathname.split("/")[2];
@@ -39,4 +39,4 @@ const Layout = () => {
   );
 }
 
-export default Layout;
+export default CustomerDashboardLayOut;

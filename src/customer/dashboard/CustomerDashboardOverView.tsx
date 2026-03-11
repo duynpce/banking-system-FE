@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import Card from "../../shared/component/Card";
 import InfoItem from '../../shared/component/InfoItem';
 import BarChar from "../../shared/component/BarChar";
+import type { cardData } from "./shared/Mycard";
+import Mycard from "./shared/Mycard";
 
 //mock data temp
-const cardData = {
+const myCardData: cardData = {
   cardNumber: "**** **** **** 1234",
   cardType: "Visa",
   expiryDate: "12/24",
@@ -38,22 +40,11 @@ const weeklySpendingData = [
   { day: "Sun", deposit: 40, withdrawal: 0 },
 ];
 
-const OverView = () => {
+const CustomerDashboardOverView = () => {
   return (
     <div className="grid grid-cols-12 gap-10 p-8 ">
       
-      <Card title="My cards" className="col-span-6" innerClassName="bg-[linear-gradient(107.38deg,_#4C49ED_2.61%,_#0A06F4_101.2%)] text-white">
-        <section className="grid grid-cols-2 h-full">
-          <InfoItem title="Card number" value={cardData.cardNumber} />
-          <InfoItem title="Card type" value={cardData.cardType} />
-          <InfoItem title="Expiry date" value={cardData.expiryDate} />
-          <InfoItem title="Card holder" value={cardData.cardHolder} />
-          <Link to="/dashboard/cards" >
-            View all cards
-          </Link>
-        </section>
-        
-      </Card>
+      <Mycard data={myCardData} className="col-span-6"  innerClassName="h-4/5"/>
 
       <Card title="Recent Transactions" className="col-span-6" innerClassName="flex flex-col mb-6 bg-white">
         {transactionData.map((tx, index) => (
@@ -96,12 +87,8 @@ const OverView = () => {
   )
 }
 
-export default OverView;
+export default CustomerDashboardOverView;
 
-
-
-
-// background: linear-gradient(107.38deg, #4C49ED 2.61%, #0A06F4 101.2%);
 
 
 
