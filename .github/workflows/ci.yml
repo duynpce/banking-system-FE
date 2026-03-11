@@ -5,9 +5,9 @@ name: CI for react project
 
 on:
   push:
-    branches: [ "main", "feat/*" ]
+    branches: [ "main", "feat/*" , "develop", "fix/*" , "hotfix/*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build:
