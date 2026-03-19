@@ -32,11 +32,11 @@ export const handleRegister = async (
   const rawData = Object.fromEntries(formData.entries());
   const data = trimObjectValues(rawData);
   try {
-    const res = await api.post(`/v1/${correspondingApi}`, data);
-    return res.data;
+    const res = await api.post<string>(`/v1/${correspondingApi}`, data);
+    return res.message || "Registration successful";
   } catch (err) {
     const error = err as AxiosError;
-    throw new Error(error.message);
+    throw new Error(error.message); 
   }
 };
 
@@ -51,9 +51,8 @@ export const checkUniqueField = async (
   const correspondingApi: string = uniqueDetailsMap[fieldName as keyof typeof uniqueDetailsMap];
 
   try {
-    
-    const exists: boolean = (
-      await api.get(`/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
+    const exists = (
+      await api.get<boolean>(`/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
     ).data;
     
     return exists;

@@ -1,68 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
 import { AccountType } from '../../types/account.type';
-import { 
-  type UniqueDetail, 
-  handleRegister, 
-  checkUniqueField 
-} from './register.service';
-import _ from "lodash";
-import { handleChangeExistsForUniqueDetails, handleChangeValueForUniqueDetails } from "../../utils/util";
+import { useRegister } from './useRegister';
 
 
 const Register = () => {
-
-  // used to check existed information when register
-  const [UniqueDetails, setUniqueDetails] = useState<UniqueDetail>({
-    username:{value : "", exists:false},
-    email: {value : "", exists:false},
-    phoneNumber: {value : "", exists:false},
-    idCardNumber: {value : "", exists:false},
-    taxIdNumber: {value : "", exists:false}
-  })
-  const [accountType, setAccountType] = useState(AccountType.PERSONAL);
-
-  const debouncedCheckUniqueField = useMemo(
-    () => _.debounce(async (name: string, value: string) => {
-      let exists = false;
-      try {
-        exists = await checkUniqueField(name, value);
-      } catch (err) {
-        console.error('Error checking unique field:', err);
-      }finally{
-        handleChangeExistsForUniqueDetails(setUniqueDetails, name ,exists);
-      }
-    }, 750),
-    []
-  );
-
-  // Cleanup: cancel pending debounced calls on unmount
-  useEffect(() => {
-    return () => {
-      debouncedCheckUniqueField.cancel();
-    };
-  }, [debouncedCheckUniqueField]);
-
-  const handleSubmit = async (e: React.SubmitEvent<HTMLElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    try {
-      const message = await handleRegister(accountType, formData);
-      alert(message); 
-    } catch (err) {
-      const error = err as Error;
-      alert(error.message);
-    }
-  }
-
-  const handleChangeUniqueDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
-    // Immediately update the input value (without exists check)
-    handleChangeValueForUniqueDetails(setUniqueDetails, name, value);
-    
-    // Debounce the API call - waits 0.75 second after user stops typing
-    debouncedCheckUniqueField(name, value);
-  }
+  const {
+    accountType,
+    setAccountType,
+    uniqueDetails,
+    handleSubmit,
+    handleChangeUniqueDetails,
+    isRegisterPending,
+  } = useRegister();
 
   return (
     <form onSubmit={handleSubmit} name="register-form">
@@ -93,12 +41,12 @@ const Register = () => {
     </nav>
     
     <label >
-      {(UniqueDetails.username.exists && UniqueDetails.username.value) && <p style={{color : "red"}}>existed username</p>}
-      {(!UniqueDetails.username.exists && UniqueDetails.username.value) && <p style={{color : "green"}}>available username</p>}
+      {(uniqueDetails.username.exists && uniqueDetails.username.value) && <p style={{color : "red"}}>existed username</p>}
+      {(!uniqueDetails.username.exists && uniqueDetails.username.value) && <p style={{color : "green"}}>available username</p>}
       <input
       name="username"
       placeholder="Username"
-      value={UniqueDetails.username.value}
+      value={uniqueDetails.username.value}
       onChange={handleChangeUniqueDetails}
       required
       />
@@ -112,25 +60,25 @@ const Register = () => {
     />
 
     <label>
-      {(UniqueDetails.email.exists && UniqueDetails.email.value) && <p style={{color : "red"}}>existed email</p>}
-      {(!UniqueDetails.email.exists && UniqueDetails.email.value) && <p style={{color : "green"}}>available email</p>}
+      {(uniqueDetails.email.exists && uniqueDetails.email.value) && <p style={{color : "red"}}>existed email</p>}
+      {(!uniqueDetails.email.exists && uniqueDetails.email.value) && <p style={{color : "green"}}>available email</p>}
       <input
         type="email"
         name="email"
         placeholder="Email"
-        value={UniqueDetails.email.value}
+        value={uniqueDetails.email.value}
         onChange={handleChangeUniqueDetails}
         required
       />
     </label>
 
     <label>
-      {(UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber.value) && <p style={{color : "red"}}>existed phone number</p>}
-      {(!UniqueDetails.phoneNumber.exists && UniqueDetails.phoneNumber.value) && <p style={{color : "green"}}>available phone number</p>}
+      {(uniqueDetails.phoneNumber.exists && uniqueDetails.phoneNumber.value) && <p style={{color : "red"}}>existed phone number</p>}
+      {(!uniqueDetails.phoneNumber.exists && uniqueDetails.phoneNumber.value) && <p style={{color : "green"}}>available phone number</p>}
       <input
         name="phoneNumber"
         placeholder="Phone Number"
-        value={UniqueDetails.phoneNumber.value}
+        value={uniqueDetails.phoneNumber.value}
         onChange={handleChangeUniqueDetails}
         required
       />
@@ -164,15 +112,15 @@ const Register = () => {
         
 
         <label>
-          {(UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber.value) && <p style={{color : "red"}}>existed ID card number</p>}
-          {(!UniqueDetails.idCardNumber.exists && UniqueDetails.idCardNumber.value) && <p style={{color : "green"}}>available ID card number</p>}
+          {(uniqueDetails.idCardNumber.exists && uniqueDetails.idCardNumber.value) && <p style={{color : "red"}}>existed ID card number</p>}
+          {(!uniqueDetails.idCardNumber.exists && uniqueDetails.idCardNumber.value) && <p style={{color : "green"}}>available ID card number</p>}
           <input
             type="text"
             id="idCardNumber"
             name="idCardNumber"
             placeholder="Id card number"
             pattern="[0-9]{9,12}"
-            value={UniqueDetails.idCardNumber.value}
+            value={uniqueDetails.idCardNumber.value}
             onChange={handleChangeUniqueDetails}
             required
           />
@@ -204,14 +152,14 @@ const Register = () => {
         />
 
         <label>
-          {(UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber.value) && <p style={{color : "red"}}>existed tax ID number</p>}
-          {(!UniqueDetails.taxIdNumber.exists && UniqueDetails.taxIdNumber.value) && <p style={{color : "green"}}>available tax ID number</p>}
+          {(uniqueDetails.taxIdNumber.exists && uniqueDetails.taxIdNumber.value) && <p style={{color : "red"}}>existed tax ID number</p>}
+          {(!uniqueDetails.taxIdNumber.exists && uniqueDetails.taxIdNumber.value) && <p style={{color : "green"}}>available tax ID number</p>}
           <input
             type="text"
             id="taxIdNumber"
             name="taxIdNumber"
             placeholder="Tax ID number"
-            value={UniqueDetails.taxIdNumber.value}
+            value={uniqueDetails.taxIdNumber.value}
             onChange={handleChangeUniqueDetails}
             required
           />
@@ -231,7 +179,7 @@ const Register = () => {
       </fieldset>
     }
   
-    <button type="submit">register</button>
+    <button type="submit" disabled={isRegisterPending}>register</button>
   </form>
   )
 }
