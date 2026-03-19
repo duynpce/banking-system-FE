@@ -1,10 +1,9 @@
 import { useState } from "react";
-import Card from "../../shared/component/Card";
-import InfoItem from "../../shared/component/InfoItem";
-import Button from "../../shared/component/Button";
-import InputWithLabel from "../../shared/component/InputWithLabel";
+import Card from "../../../shared/component/Card";
+import InfoItem from "../../../shared/component/InfoItem";
+import Button from "../../../shared/component/Button";
+import InputWithLabel from "../../../shared/component/InputWithLabel";
 
-// ── Types ──────────────────────────────────────────────────────────────────
 type Tab = "Edit Profile" | "Edit Password";
 
 type ProfileForm = {
@@ -18,19 +17,15 @@ type PasswordForm = {
   newPassword: string;
 };
 
-// ── Stat card icon colours ────────────────────────────────────────────────
 const statCards = [
   { label: "My Balance", value: "$12,750", bg: "bg-yellow-100", text: "text-yellow-500" },
   { label: "Income",     value: "$5,600",  bg: "bg-blue-100",   text: "text-blue-500"   },
   { label: "Expense",    value: "$3,460",  bg: "bg-pink-100",   text: "text-pink-500"   },
 ];
 
-// ── Main component ────────────────────────────────────────────────────────
 const CustomerDashboardAccount = () => {
-  // ---------- tab ----------
   const [activeTab, setActiveTab] = useState<Tab>("Edit Profile");
 
-  // ---------- edit-profile ----------
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [verifyPassword, setVerifyPassword] = useState("");
@@ -45,13 +40,11 @@ const CustomerDashboardAccount = () => {
   });
   const [profileDraft, setProfileDraft] = useState<ProfileForm>(profile);
 
-  // ---------- security ----------
   const [passwords, setPasswords] = useState<PasswordForm>({
     currentPassword: "",
     newPassword: "",
   });
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
   const handleEditClick = () => {
     setVerifyPassword("");
     setVerifyError("");
@@ -75,7 +68,6 @@ const CustomerDashboardAccount = () => {
     setIsEditing(false);
   };
 
-  // ── Shared input class ────────────────────────────────────────────────────
   const inputClass = (disabled: boolean) =>
     `w-full border rounded-xl px-4 py-3 text-sm outline-none transition-colors ${
       disabled
@@ -83,13 +75,11 @@ const CustomerDashboardAccount = () => {
         : "bg-white text-gray-700 border-blue-400 focus:ring-2 focus:ring-blue-300"
     }`;
 
-  // ── Tabs ─────────────────────────────────────────────────────────────────
   const TABS: Tab[] = ["Edit Profile", "Edit Password"];
 
   return (
     <div className="grid grid-cols-12 gap-5 p-8">
 
-      {/* ── Row 1 : stat cards ────────────────────────────────────────────── */}
       {statCards.map((card) => (
         <Card
           key={card.label}
@@ -104,10 +94,8 @@ const CustomerDashboardAccount = () => {
         </Card>
       ))}
 
-      {/* ── Row 2 : settings section ──────────────────────────────────────── */}
       <Card className="col-span-12 bg-white rounded-3xl p-4" title={""}>
 
-        {/* Tab navbar */}
         <nav className="flex gap-8 border-b border-gray-200">
           {TABS.map((tab) => (
             <button
@@ -124,7 +112,6 @@ const CustomerDashboardAccount = () => {
           ))}
         </nav>
 
-        {/* ── Edit Profile ───────────────────────────────────────────────── */}
         {activeTab === "Edit Profile" && (
           <form className="flex flex-col items-center justify-center w-full h-full mb-8 gap-4" onSubmit={handleProfileSave}>
 
@@ -195,7 +182,6 @@ const CustomerDashboardAccount = () => {
 
       </Card>
 
-      {/* ── Password verification modal ───────────────────────────────────── */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">

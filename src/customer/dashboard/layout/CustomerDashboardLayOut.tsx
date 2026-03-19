@@ -1,17 +1,15 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import SearchBar from '../../shared/component/SearchBar';
+import SearchBar from '../../../shared/component/SearchBar';
 
 const CustomerDashboardLayOut = () => {
-   const location = useLocation();
+  const location = useLocation();
   
   const dashBoardName =  location.pathname.split("/")[2];
    return (
     <div className="grid grid-cols-12">
 
       <aside className="col-span-3 flex flex-col p-4 gap-4 border border-gray-300 text-gray-700">
-        <Link to="/" className="text-xl font-bold">
-          PDBank
-        </Link>
+        <Link to="/" className="text-xl font-bold"> PDBank  </Link>
         <Link to="/dashboard/overview">Overview</Link>
         <Link to="/dashboard/transactions">Transactions</Link>
         <Link to="/dashboard/accounts">Accounts</Link>

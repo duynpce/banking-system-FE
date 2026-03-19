@@ -1,22 +1,14 @@
 import { Link } from "react-router-dom";
-import Card from "../../shared/component/Card";
-import InfoItem from '../../shared/component/InfoItem';
-import BarChar from "../../shared/component/BarChar";
-import type { cardData } from "./shared/Mycard";
-import Mycard from "./shared/Mycard";
 
-//mock data temp
-const myCardData: cardData = {
-  cardNumber: "**** **** **** 1234",
-  cardType: "Visa",
-  expiryDate: "12/24",
-  cardHolder: "John Doe",
-};
+import Mycard from "../shared/mycard/Mycard";
+import Card from "../../../shared/component/Card";
+import InfoItem from "../../../shared/component/InfoItem";
+import BarChar from "../../../shared/component/BarChar";
 
 const transactionData = [
-  { description: "Grocery Store", amount: -50.25, date: "2024-06-01" },
-  { description: "Salary", amount: 2000.00, date: "2024-06-01" },
-  { description: "Electricity Bill", amount: -75.00, date: "2024-05-30" },
+    { description: "Grocery Store", amount: -50.25, date: "2024-06-01" },
+    { description: "Salary", amount: 2000.00, date: "2024-06-01" },
+    { description: "Electricity Bill", amount: -75.00, date: "2024-05-30" },
 ];
 
 
@@ -44,7 +36,7 @@ const CustomerDashboardOverView = () => {
   return (
     <div className="grid grid-cols-12 gap-10 p-8 ">
       
-      <Mycard data={myCardData} className="col-span-6"  innerClassName="h-4/5"/>
+      <Mycard className="col-span-6"  innerClassName="h-4/5" />
 
       <Card title="Recent Transactions" className="col-span-6" innerClassName="flex flex-col mb-6 bg-white">
         {transactionData.map((tx, index) => (

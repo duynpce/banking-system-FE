@@ -1,4 +1,4 @@
-import { server } from '../../mocks/server';
+import { server } from '../../config/server.config';
 import { ROOT_API_URL } from '../../../src/shared/constant/constant';
 import { delay, http } from 'msw';
 import { describe, expect, it, vi } from 'vitest';

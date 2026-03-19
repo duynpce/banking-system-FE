@@ -2,7 +2,6 @@ import { useState } from "react";
 import Card from "../../shared/component/Card";
 import InfoItem from "../../shared/component/InfoItem";
 
-// ── Types ───────────────────────────────────────────────────────────────────
 type Tab = "Loans" | "Loan Fine";
 
 type Loan = {
@@ -40,7 +39,6 @@ const fines: LoanFine[] = [
   { id: "F04", loanId: "07", fineAmount: 150,  type: "Early Payment"  },
 ];
 
-// ── Derived totals ──────────────────────────────────────────────────────────
 const totalLoan     = loans.reduce((s, l) => s + l.loanMoney, 0);
 const unpaidLoan    = loans.reduce((s, l) => s + l.leftToRepay, 0);
 const overdatedLoan = loans.filter((l) => ["Overdue"].some(() => fines.find((f) => f.loanId === l.id && f.type === "Overdue"))).reduce((s, l) => s + l.leftToRepay, 0);
@@ -55,12 +53,12 @@ const statCards = [
   { label: "Loan Fine",      value: fmt(loanFineTotal), bg: "bg-teal-100",   text: "text-teal-500"  },
 ];
 
-// ── Loan totals row ─────────────────────────────────────────────────────────
 const totalLeftToRepay    = loans.reduce((s, l) => s + l.leftToRepay, 0);
 const totalLoanMoney      = loans.reduce((s, l) => s + l.loanMoney, 0);
 
-// ── Component ───────────────────────────────────────────────────────────────
 const CustomerDashboardLoan = () => {
+  const TOTAL_PAGES = 4;
+  const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState<Tab>("Loans");
 
   const TABS: Tab[] = ["Loans", "Loan Fine"];
@@ -68,7 +66,6 @@ const CustomerDashboardLoan = () => {
   return (
     <div className="grid grid-cols-12 gap-10 p-8">
 
-      {/* ── Row 1 : stat cards ─────────────────────────────────────────────── */}
       {statCards.map((card) => (
         <Card
           key={card.label}
@@ -83,10 +80,8 @@ const CustomerDashboardLoan = () => {
         </Card>
       ))}
 
-      {/* ── Row 2 : table card ─────────────────────────────────────────────── */}
       <Card title="Active Loans Overview" className="col-span-12" innerClassName="bg-white">
 
-        {/* Tab navbar */}
         <nav className="flex gap-8 border-b border-gray-200 mb-6">
           {TABS.map((tab) => (
             <button
@@ -103,10 +98,8 @@ const CustomerDashboardLoan = () => {
           ))}
         </nav>
 
-        {/* ── Loans tab ──────────────────────────────────────────────────── */}
         {activeTab === "Loans" && (
           <div className="overflow-x-auto">
-            {/* Header */}
             <div className="grid grid-cols-7 text-blue-500 text-sm font-semibold mb-2 px-4">
               <span>ID</span>
               <span>Loan Money</span>
@@ -117,7 +110,6 @@ const CustomerDashboardLoan = () => {
               <span>Repay</span>
             </div>
 
-            {/* Rows */}
             {loans.map((loan) => (
               <div
                 key={loan.id}
@@ -135,7 +127,6 @@ const CustomerDashboardLoan = () => {
               </div>
             ))}
 
-            {/* Totals row */}
             <div className="grid grid-cols-7 items-center py-4 px-4 text-sm font-semibold text-red-500">
               <span>Total</span>
               <span>${totalLoanMoney.toLocaleString()}</span>
@@ -148,10 +139,8 @@ const CustomerDashboardLoan = () => {
           </div>
         )}
 
-        {/* ── Loan Fine tab ──────────────────────────────────────────────── */}
         {activeTab === "Loan Fine" && (
           <div className="overflow-x-auto">
-            {/* Header */}
             <div className="grid grid-cols-4 text-blue-500 text-sm font-semibold mb-2 px-4">
               <span>ID</span>
               <span>Loan ID</span>
@@ -159,7 +148,6 @@ const CustomerDashboardLoan = () => {
               <span>Type</span>
             </div>
 
-            {/* Rows */}
             {fines.map((fine) => (
               <div
                 key={fine.id}
@@ -182,7 +170,6 @@ const CustomerDashboardLoan = () => {
               </div>
             ))}
 
-            {/* Fine total */}
             <div className="grid grid-cols-4 items-center py-4 px-4 text-sm font-semibold text-red-500">
               <span>Total</span>
               <span />
@@ -191,6 +178,35 @@ const CustomerDashboardLoan = () => {
             </div>
           </div>
         )}
+
+         {/* temp will be grouped into a component later */}
+        <nav className="flex justify-end items-center gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2"
+          >
+            &lt; Previous
+          </button>
+          {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`w-8 h-8 rounded-full text-sm font-medium ${
+                currentPage === page
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2"
+          >
+            Next &gt;
+          </button>
+        </nav>
 
       </Card>
     </div>

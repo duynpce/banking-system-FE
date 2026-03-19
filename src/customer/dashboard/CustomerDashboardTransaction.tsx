@@ -1,15 +1,10 @@
 import { useState } from "react";
 import Card from "../../shared/component/Card";
 import BarChar from "../../shared/component/BarChar";
-import Mycard from "./shared/Mycard";
-import type { cardData } from "./shared/Mycard";
+import Mycard from "./shared/mycard/Mycard";
 
-const myCardData: cardData = {
-  cardNumber: "3778 **** **** 1234",
-  cardType: "Visa",
-  expiryDate: "12/22",
-  cardHolder: "Eddy Cusuma",
-};
+
+
 
 const expenseData = [
   { month: "Aug", amount: 4000 },
@@ -49,8 +44,7 @@ const CustomerDashboardTransaction = () => {
   return (
     <div className="grid grid-cols-12 gap-10 p-8">
 
-      {/* Row 1 */}
-      <Mycard data={myCardData} className="col-span-6" innerClassName="h-4/5" />
+      <Mycard className="col-span-6" innerClassName="h-4/5" />
 
       <Card title="My Expense" className="col-span-6" innerClassName="bg-white h-4/5">
         <BarChar
@@ -60,10 +54,9 @@ const CustomerDashboardTransaction = () => {
         />
       </Card>
 
-      {/* Row 2 */}
       <Card title="Recent Transactions" className="col-span-12" innerClassName="bg-white h-4/5">
 
-        {/* Tab navbar */}
+      {/* temp will be grouped into a component later */}
         <nav className="flex gap-8 border-b border-gray-200 mb-6">
           {TABS.map((tab) => (
             <button
@@ -80,7 +73,6 @@ const CustomerDashboardTransaction = () => {
           ))}
         </nav>
 
-        {/* Table header */}
         <div className="grid grid-cols-6 text-blue-600 text-sm font-semibold mb-2 px-4">
           <span>Description</span>
           <span>Transaction ID</span>
@@ -90,7 +82,6 @@ const CustomerDashboardTransaction = () => {
           <span>Amount</span>
         </div>
 
-        {/* Transaction rows */}
         <section className="flex flex-col">
           {transactions.map((tx, index) => (
             <div
@@ -128,8 +119,8 @@ const CustomerDashboardTransaction = () => {
           ))}
         </section>
 
-        {/* Pagination */}
-        <div className="flex justify-end items-center gap-2 mt-6">
+      {/* temp will be grouped into a component later */}
+        <nav className="flex justify-end items-center gap-2 mt-6">
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2"
@@ -155,7 +146,7 @@ const CustomerDashboardTransaction = () => {
           >
             Next &gt;
           </button>
-        </div>
+        </nav>
 
       </Card>
     </div>

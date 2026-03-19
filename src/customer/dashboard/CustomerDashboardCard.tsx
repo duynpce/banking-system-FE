@@ -2,7 +2,6 @@ import { useState } from "react";
 import Card from "../../shared/component/Card";
 import Button from "../../shared/component/Button";
 
-// ── Types ───────────────────────────────────────────────────────────────────
 type CardType = "Credit" | "Debit";
 
 type CardItem = {
@@ -31,8 +30,9 @@ const initialCards: CardItem[] = [
 
 const CARD_PRIVILEGES = ["Classic", "Gold", "Platinum"] as const;
 
-// ── Component ───────────────────────────────────────────────────────────────
 const CustomerDashboardCard = () => {
+  const TOTAL_PAGES = 4;
+  const [currentPage, setCurrentPage] = useState(1);
   const [cards, setCards] = useState<CardItem[]>(initialCards);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editDraft, setEditDraft]   = useState<Partial<CardItem>>({});
@@ -45,7 +45,6 @@ const CustomerDashboardCard = () => {
     annualFee: "",
   });
 
-  // ── Card list handlers ────────────────────────────────────────────────────
   const handleEditStart = (card: CardItem) => {
     setEditingId(card.id);
     setEditDraft({ cardHolder: card.cardHolder, cardType: card.cardType });
@@ -58,7 +57,6 @@ const CustomerDashboardCard = () => {
 
   const handleEditCancel = () => setEditingId(null);
 
-  // ── Add card handler ──────────────────────────────────────────────────────
   const handleAddCard = (e: React.SubmitEvent) => {
     e.preventDefault();
     const next: CardItem = {
@@ -73,13 +71,12 @@ const CustomerDashboardCard = () => {
     setForm({ cardType: "Credit", cardHolder: "", cardPrivilege: "Classic", expirationDate: "", annualFee: "" });
   };
 
-  // ── Shared input class ────────────────────────────────────────────────────
   const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-blue-300 bg-white";
 
   return (
+    
     <div className="grid grid-cols-12 gap-10 p-8">
 
-      {/* ── Row 1 : Card List ──────────────────────────────────────────────── */}
       <Card title="Card List" className="col-span-12" innerClassName="bg-white flex flex-col gap-4">
 
         {cards.map((card) => (
@@ -87,12 +84,10 @@ const CustomerDashboardCard = () => {
             key={card.id}
             className="flex items-center gap-6 p-4 rounded-2xl border border-gray-100 bg-white shadow-sm"
           >
-            {/* Icon */}
             <span className={`flex items-center justify-center w-12 h-12 rounded-xl text-xl ${card.iconBg} ${card.iconText}`}>
               ☰
             </span>
 
-            {/* Card Type */}
             {editingId === card.id ? (
               <input
                 className={`${inputClass} w-32`}
@@ -106,13 +101,12 @@ const CustomerDashboardCard = () => {
               </div>
             )}
 
-            {/* Card Number */}
+
             <div className="flex flex-col w-40">
               <span className="text-xs text-gray-400">Card Number</span>
               <span className="text-sm font-medium text-blue-500">{card.cardNumber}</span>
             </div>
 
-            {/* Card Holder */}
             {editingId === card.id ? (
               <input
                 className={`${inputClass} w-36`}
@@ -126,7 +120,6 @@ const CustomerDashboardCard = () => {
               </div>
             )}
 
-            {/* Actions */}
             <div className="ml-auto flex items-center gap-4 text-sm font-medium text-blue-600">
               {editingId === card.id ? (
                 <>
@@ -143,10 +136,37 @@ const CustomerDashboardCard = () => {
             </div>
           </div>
         ))}
-
+        
+        {/* temp will be grouped into a component later */}
+        <nav className="flex justify-end items-center gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2"
+          >
+            &lt; Previous
+          </button>
+          {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`w-8 h-8 rounded-full text-sm font-medium ${
+                currentPage === page
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(TOTAL_PAGES, p + 1))}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2"
+          >
+            Next &gt;
+          </button>
+        </nav>
       </Card>
 
-      {/* ── Row 2 : Add New Card ───────────────────────────────────────────── */}
       <Card title="Add New Card" className="col-span-12" innerClassName="bg-white">
 
         <p className="text-sm text-blue-400 mb-6 leading-relaxed max-w-2xl">
@@ -157,7 +177,6 @@ const CustomerDashboardCard = () => {
 
         <form onSubmit={handleAddCard} className="grid grid-cols-2 gap-6">
 
-          {/* Card Type */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Card Type</label>
             <select
@@ -170,7 +189,6 @@ const CustomerDashboardCard = () => {
             </select>
           </div>
 
-          {/* Card Holder */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Card Holder</label>
             <input
@@ -181,7 +199,6 @@ const CustomerDashboardCard = () => {
             />
           </div>
 
-          {/* Card Privilege */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Card Privilege</label>
             <select
@@ -195,7 +212,6 @@ const CustomerDashboardCard = () => {
             </select>
           </div>
 
-          {/* Expiration Date */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Expiration Date</label>
             <input
@@ -206,8 +222,7 @@ const CustomerDashboardCard = () => {
             />
           </div>
 
-          {/* Annual Fee */}
-          <div className="flex flex-col gap-1 col-span-2">
+          <div className="flex flex-col gap-1 ">
             <label className="text-sm text-gray-600">Annual Fee ($)</label>
             <input
               type="number"
@@ -219,9 +234,7 @@ const CustomerDashboardCard = () => {
             />
           </div>
 
-          <div className="col-span-2">
             <Button type="submit" content="Add Card" className="rounded-xl px-8" />
-          </div>
 
         </form>
       </Card>

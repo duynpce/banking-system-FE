@@ -11,7 +11,7 @@ const CallBack = () => {
     const signal = controller.signal;
     
     if (!code) {
-      navigate("/login");
+      navigate("/login", {replace: true});  
       return;
     }
 
