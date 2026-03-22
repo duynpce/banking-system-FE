@@ -1,10 +1,10 @@
 import {  expect, test , describe, vi, type Mock} from "vitest";
 import { AxiosError } from "axios";
-import { handleRegister, checkUniqueField } from '../../../src/auth/register/register.service';
-import { AccountType } from "../../../src/types/account.type";
-import { api } from "../../../src/utils/api";
+import { handleRegister, checkUniqueField } from '../../../src/feat/auth/register/register.service';
+import { AccountType } from "../../../src/shared/types/account.type";
+import { api } from "../../../src/config/api";
 
-vi.mock("../../../src/utils/api", () => ({
+vi.mock("../../../src/config/api", () => ({
   api: {
     post: vi.fn(),
     get: vi.fn(),

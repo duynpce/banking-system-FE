@@ -8,7 +8,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import Register from '../../../src/auth/register/Register';
+import Register from '../../../src/feat/auth/register/Register';
 
 type personalAccountRequestBody = {
   username: string;

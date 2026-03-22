@@ -1,19 +1,19 @@
 import "./App.css";
-import Login from "./auth/login/Login";
+import Login from "./feat/auth/login/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./home/Home";
-import CallBack from "./auth/callback/CallBack";
-import Authorize from "./auth/callback/Authorize";
-import Register from "./auth/register/Register";
-import CustomerDashboardLayOut from "./customer/dashboard/layout/CustomerDashboardLayOut";
-import CustomerDashboardOverView from "./customer/dashboard/overview/CustomerDashboardOverView";
-import CustomerDashboardTransaction from "./customer/dashboard/CustomerDashboardTransaction";
-import CustomerDashboardAccount from "./customer/dashboard/account/CustomerDashboardAccount";
-import CustomerDashboardCard from "./customer/dashboard/CustomerDashboardCard";
-import CustomerDashboardLoan from "./customer/dashboard/CustomerDashboardLoan";
-import ToastProvider from "./shared/config/ToastProvider.config";
+import Home from "./feat/home/Home";
+import CallBack from "./feat/auth/callback/CallBack";
+import Authorize from "./feat/auth/callback/Authorize";
+import Register from "./feat/auth/register/Register";
+import CustomerDashboardLayOut from "./feat/customer/dashboard/layout/CustomerDashboardLayOut";
+import CustomerDashboardOverView from "./feat/customer/dashboard/overview/CustomerDashboardOverView";
+import CustomerDashboardTransaction from "./feat/customer/dashboard/CustomerDashboardTransaction";
+import CustomerDashboardAccount from "./feat/customer/dashboard/account/CustomerDashboardAccount";
+import CustomerDashboardCard from "./feat/customer/dashboard/CustomerDashboardCard";
+import CustomerDashboardLoan from "./feat/customer/dashboard/CustomerDashboardLoan";
+import ToastProvider from "./config/ToastProvider.config";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClientConfig } from "./shared/config/userQuery.config";
+import { queryClientConfig } from "./config/userQuery.config";
 
 function App() {
   return (

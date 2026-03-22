@@ -1,7 +1,7 @@
 
 import type { ChangeEvent } from "react";
 import {  expect, test, vi } from "vitest";
-import { handleChange, handleChangeValueForUniqueDetails, handleChangeExistsForUniqueDetails, trimObjectValues } from '../../src/utils/util';
+import { handleChange, handleChangeValueForUniqueDetails, handleChangeExistsForUniqueDetails, trimObjectValues } from '../../src/shared/utils/util';
 
 test("test handleChange " ,  () => {
     //evm
