@@ -18,7 +18,7 @@ describe("test handleRegister", () => {
     const formData = new FormData();
     
     mockPost.mockResolvedValue({
-      data: "create business account successfully"
+      message: "create business account successfully"
     })
 
     const result = await handleRegister(AccountType.BUSINESS,formData);
