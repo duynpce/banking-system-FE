@@ -67,3 +67,6 @@ Feature-based folder structure. Each feature follows this pattern:
     - Use Conventional Commits (feat:, fix:, chore:, refactor:)
     - Write simple, clear, and concise commit messages that describe the changes made
     - If there is a conflict, tell me before resolving it and explain why your solution is the best
+
+# context 
+    - read the api.local.json for backend API details
