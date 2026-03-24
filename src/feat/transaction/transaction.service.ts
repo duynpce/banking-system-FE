@@ -1,4 +1,4 @@
-import { api } from "../../config/api";
+import { api } from "../../config/axios/api";
 
 export interface Transaction {
   id: string;

@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { api } from "../../config/api"
+import { api } from "../../config/axios/api"
 import { toast } from "react-toastify"
 
 // return 400 error --> to test error handling in api.ts
@@ -9,7 +9,7 @@ const onTestError = async() => {
 
 // return 200 success --> to test success handling in api.ts
 const onTestSuccess = async () => {
-  const res = await api.get<string>(`/v1/test/home`)
+  const res = await api.get<string>(`/v1/test/home`,{toastMessageWhenSuccess: "hello"})
   toast.success("API call successful: " + res)
     
 }

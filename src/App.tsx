@@ -13,11 +13,11 @@ import CustomerDashboardCard from "./feat/customer/dashboard/CustomerDashboardCa
 import CustomerDashboardLoan from "./feat/customer/dashboard/CustomerDashboardLoan";
 import ToastProvider from "./config/ToastProvider.config";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClientConfig } from "./config/userQuery.config";
+import { queryClient } from "./config/userQuery.config";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClientConfig}>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}/>
