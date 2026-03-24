@@ -1,7 +1,14 @@
 
 import type { ChangeEvent } from "react";
 import {  expect, test, vi } from "vitest";
-import { handleChange, handleChangeValueForUniqueDetails, handleChangeExistsForUniqueDetails, trimObjectValues } from '../../src/shared/utils/util';
+import {
+  handleChange,
+  handleChangeValueForUniqueDetails,
+  handleChangeExistsForUniqueDetails,
+  trimObjectValues,
+  getDataFromForm,
+  getTrimmedDataFromForm,
+} from '../../src/shared/utils/util';
 
 test("test handleChange " ,  () => {
     //evm
@@ -116,5 +123,31 @@ test("test trimObjectValues", () => {
       password: "pass123",
       age: 25,
       active: true
+    });
+});
+
+test("test getDataFromForm", () => {
+    const formData = new FormData();
+    formData.append("username", "  testUser  ");
+    formData.append("password", "  pass123  ");
+
+    const result = getDataFromForm(formData);
+
+    expect(result).toEqual({
+      username: "  testUser  ",
+      password: "  pass123  "
+    });
+});
+
+test("test getTrimmedDataFromForm", () => {
+    const formData = new FormData();
+    formData.append("username", "  testUser  ");
+    formData.append("password", "  pass123  ");
+
+    const result = getTrimmedDataFromForm(formData);
+
+    expect(result).toEqual({
+      username: "testUser",
+      password: "pass123"
     });
 });

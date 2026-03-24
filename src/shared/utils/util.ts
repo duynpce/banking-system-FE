@@ -43,4 +43,12 @@ export const trimObjectValues = (obj : Record<string,unknown>) => {
   return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value]));
 };
 
+export const getDataFromForm = (formData: FormData): Record<string, unknown> => {
+  return Object.fromEntries(formData.entries());
+};
+
+export const getTrimmedDataFromForm = (formData: FormData): Record<string, unknown> => {
+  return trimObjectValues(getDataFromForm(formData));
+};
+
 

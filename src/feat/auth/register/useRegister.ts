@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import _ from "lodash";
-import { AccountType } from "../../../shared/types/account.type";
+import { AccountType } from "../../account/account.type";
 import {
   type UniqueDetail,
   checkUniqueField,
-  handleRegister,
 } from "./register.service";
 import {
   handleChangeExistsForUniqueDetails,
   handleChangeValueForUniqueDetails,
 } from "../../../shared/utils/util";
+import { useAccount } from "../../account/useAccount";
 
 export const useRegister = () => {
   const navigate = useNavigate();
+  const{useCreateAccount} = useAccount();
 
   //used to check existence of unique details and store their values
   const [uniqueDetails, setUniqueDetails] = useState<UniqueDetail>({
@@ -28,13 +28,13 @@ export const useRegister = () => {
   const [accountType, setAccountType] = useState(AccountType.PERSONAL);
 
   const registerMutation = useMutation({
-    mutationFn: ({
-      currentAccountType,
+    mutationFn: async ({
       formData,
+      accountType
     }: {
-      currentAccountType: AccountType;
+      accountType: AccountType;
       formData: FormData;
-    }) => handleRegister(currentAccountType, formData),
+    }) => await useCreateAccount.mutate({ formData: formData, accountType: accountType }),
   });
 
   //use mutate to get built-in states like isPending, isSuccess, isError
@@ -71,15 +71,10 @@ export const useRegister = () => {
     const formData = new FormData(e.currentTarget);
 
     registerMutation.mutate(
-      { currentAccountType: accountType, formData },
+      { formData, accountType },
       {
-        onSuccess: (message) => {
-          toast.success(message);
+        onSuccess: () => {
           navigate("/login");
-        },
-        onError: (error) => {
-          const err = error as Error;
-          toast.error(err.message);
         },
       }
     );

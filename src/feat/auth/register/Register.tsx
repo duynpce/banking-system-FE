@@ -1,4 +1,4 @@
-import { AccountType } from '../../../shared/types/account.type';
+import { AccountType } from '../../account/account.type';
 import { useRegister } from './useRegister';
 
 

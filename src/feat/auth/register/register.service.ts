@@ -1,7 +1,4 @@
-import { AxiosError } from "axios";
-import { AccountType } from "../../../shared/types/account.type";
-import {  trimObjectValues } from "../../../shared/utils/util";
-import { api } from "../../../config/api";
+import { api } from "../../../config/axios/api";
 import { type UniqueDetailObj } from "../../../shared/types/unique-detail.type";
 import _ from "lodash";
 
@@ -9,11 +6,6 @@ import _ from "lodash";
 export type UniqueField = "username" | "email" | "phoneNumber" | "idCardNumber" | "taxIdNumber";
 export type UniqueDetail = Record<UniqueField, UniqueDetailObj>;
 
-export const apiMap = {
-  [AccountType.BUSINESS]: "business-accounts",
-  [AccountType.PERSONAL]: "personal-accounts",
-  [AccountType.GOVERNMENT]: "government-accounts",
-};
 
 // Unique details mapping to check which endpoint to use for validation
 export const uniqueDetailsMap = {
@@ -22,22 +14,6 @@ export const uniqueDetailsMap = {
   "email": "accounts",
   "idCardNumber": "personal-accounts",
   "taxIdNumber": "business-accounts"
-};
-
-export const handleRegister = async (
-  accountType: AccountType,
-  formData: FormData
-): Promise<string> => {
-  const correspondingApi = apiMap[accountType];
-  const rawData = Object.fromEntries(formData.entries());
-  const data = trimObjectValues(rawData);
-  try {
-    const res = await api.post<string>(`/v1/${correspondingApi}`, data);
-    return res.message || "Registration successful";
-  } catch (err) {
-    const error = err as AxiosError;
-    throw new Error(error.message); 
-  }
 };
 
 export const checkUniqueField = async (
@@ -49,15 +25,9 @@ export const checkUniqueField = async (
   }
 
   const correspondingApi: string = uniqueDetailsMap[fieldName as keyof typeof uniqueDetailsMap];
+  const exists = (
+    await api.get<boolean>(`/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
+  ).data;
 
-  try {
-    const exists = (
-      await api.get<boolean>(`/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
-    ).data;
-    
-    return exists;
-  } catch (err) {
-    const error = err as AxiosError;
-    throw new Error(error.message);
-  }
+  return exists;
 };
