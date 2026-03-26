@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { api } from "../../../src/config/axios/api";
 import { checkUniqueField } from "../../../src/feat/auth/register/register.service";
 
-vi.mock("../../../src/config/api", () => ({
+vi.mock("../../../src/config/axios/api", () => ({
   api: {
     post: vi.fn(),
     get: vi.fn(),

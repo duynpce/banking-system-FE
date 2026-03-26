@@ -3,7 +3,7 @@ import { describe, expect, test, vi, type Mock } from 'vitest';
 import { handleCallback } from '../../../src/feat/auth/callback/callback.service';
 import { api, setAccessToken } from '../../../src/config/axios/api';
 
-vi.mock("../../../src/config/api", () => ({
+vi.mock("../../../src/config/axios/api", () => ({
   api: {
     get: vi.fn(),
     defaults: { headers: { common: {} } },

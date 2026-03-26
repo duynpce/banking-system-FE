@@ -6,29 +6,29 @@ import {
 } from "./account.service";
 import { AccountType } from './account.type';
 
-export const useAccount = () => {
-	const useCreateAccount = useMutation({
+
+export const useCreateAccount = () => {
+	return useMutation({
 		mutationKey: ["create-account"],
-		mutationFn: ({formData, accountType}: { formData: FormData; accountType: AccountType }) => {
+		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
 			return createAccount(formData, accountType);
 		},
 	});
+};
 
-	const useUpdateAccount = useMutation({
+export const useUpdateAccount = () => {
+	return useMutation({
 		mutationKey: ["update-account"],
-		mutationFn: ({formData, accountType}: { formData: FormData; accountType: AccountType }) => {
+		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
 			return updateAccount(formData, accountType);
 		},
 	});
-
-	const useGetAccountQuery = useQuery({
-		queryKey: ["my-account"],
-		queryFn: () => getAccount(),
-	});
-
-	return {
-		useCreateAccount,
-		useUpdateAccount,
-		useGetAccountQuery,
-	};
 };
+
+	export const useGetAccountQuery = () => {
+		return useQuery({
+			queryKey: ["my-account"],
+			queryFn: () => getAccount(),
+		});
+	};
+

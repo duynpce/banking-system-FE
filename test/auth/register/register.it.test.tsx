@@ -2,11 +2,11 @@ import { server } from '../../config/server.config';
 import { ROOT_API_URL } from '../../../src/shared/constant/constant';
 import { delay, http } from 'msw';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import '@testing-library/jest-dom';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import '@testing-library/jest-dom'; //temp will be set as global in vitest config file
 import { toast } from 'react-toastify';
 import Register from '../../../src/feat/auth/register/Register';
 

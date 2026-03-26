@@ -11,11 +11,11 @@ import {
   handleChangeExistsForUniqueDetails,
   handleChangeValueForUniqueDetails,
 } from "../../../shared/utils/util";
-import { useAccount } from "../../account/useAccount";
+import { useCreateAccount } from "../../account/useAccount";
 
 export const useRegister = () => {
   const navigate = useNavigate();
-  const{useCreateAccount} = useAccount();
+  
 
   //used to check existence of unique details and store their values
   const [uniqueDetails, setUniqueDetails] = useState<UniqueDetail>({
@@ -27,15 +27,7 @@ export const useRegister = () => {
   });
   const [accountType, setAccountType] = useState(AccountType.PERSONAL);
 
-  const registerMutation = useMutation({
-    mutationFn: async ({
-      formData,
-      accountType
-    }: {
-      accountType: AccountType;
-      formData: FormData;
-    }) => await useCreateAccount.mutate({ formData: formData, accountType: accountType }),
-  });
+  const registerMutation = useCreateAccount();
 
   //use mutate to get built-in states like isPending, isSuccess, isError
   const uniqueFieldMutation = useMutation({
