@@ -68,6 +68,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
+         
         const res = await refreshApi.post<string>("/v1/auth/refresh-token");
         setAccessToken(res.data);
 
@@ -89,8 +90,12 @@ api.interceptors.response.use(
     } else if(axios.isCancel(error)) {
       toast.error("Request canceled.");
     }
+    else if (error.code === 'ERR_NETWORK') {
+      toast.error("Please check your connection.");
+    }
     else {
       toast.error(error.response?.data?.message || "An error occurred. Please try again.");
+      
     }
   }
 );
