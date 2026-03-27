@@ -9,7 +9,7 @@ import CustomerDashboardLayOut from "./feat/customer/dashboard/layout/CustomerDa
 import CustomerDashboardOverView from "./feat/customer/dashboard/overview/CustomerDashboardOverView";
 import CustomerDashboardTransaction from "./feat/customer/dashboard/CustomerDashboardTransaction";
 import CustomerDashboardAccount from "./feat/customer/dashboard/account/CustomerDashboardAccount";
-import CustomerDashboardCard from "./feat/customer/dashboard/CustomerDashboardCard";
+import CustomerDashboardCard from "./feat/customer/card/CustomerDashboardCard";
 import CustomerDashboardLoan from "./feat/customer/dashboard/CustomerDashboardLoan";
 import ToastProvider from "./config/ToastProvider.config";
 import { QueryClientProvider } from "@tanstack/react-query";

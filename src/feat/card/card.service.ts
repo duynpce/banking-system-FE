@@ -20,18 +20,18 @@ export const createCard = async(formData: FormData) => {
   }
 
   const res = await api.post(`/v1/${correspondingApi}`, data);
-  return res.data ;
+  return res.data ?? null ;
 }
 
 export const getCard = async() => {
-  const res = await api.get<CardDto>("/v1/cards/first");
-  return res.data ;
+  const res = await api.get<CardDto>("/v1/cards/first"); 
+  return res.data ?? null ;
 }
 
 export const getCards = async(page: number, limit: number) => {
   const res = await api.get<CardDto[]>("/v1/cards", {
     params: { page, limit }
   });
-  return res.data ;
+  return res.data ?? null ;
 }
 

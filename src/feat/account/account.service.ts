@@ -24,7 +24,7 @@ export const updateAccount = async (formData: FormData, accountType: AccountType
 
 export const getAccount = async () => {
   const res = await api.get<AccountDto>("/v1/accounts")
-  return res.data;
+  return res.data ?? null ;
 }
 
 export const convertDataToDto = (accountDto: AccountDto) => {
