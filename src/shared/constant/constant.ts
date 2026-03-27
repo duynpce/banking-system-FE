@@ -5,6 +5,7 @@ export const CALLBACK_URL = import.meta.env.VITE_CALLBACK_URL
 export const AUTHORIZE_URL = import.meta.env.VITE_AUTHORIZE_URL;
 export const TOKEN_URL = import.meta.env.VITE_TOKEN_URL;
 export const ROOT_URL = import.meta.env.VITE_ROOT_URL;
+export const LOGOUT_URL = import.meta.env.VITE_LOGOUT_URL;
 
 export const SCOPE_READ = "api:read";
 export const SCOPE_WRITE = "api:write";

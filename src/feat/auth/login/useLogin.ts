@@ -1,18 +1,26 @@
 import { useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getErrorMessage } from "./login.service";
+import { getMessage } from "./login.service";
+import { toast } from "react-toastify";
 
 export const useLogin = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
-  const message = getErrorMessage(searchParams.get("error"));
+  const message = getMessage(searchParams);
   
   useEffect(() => {
       const savedUsername = sessionStorage.getItem("username");
       if (savedUsername && usernameRef.current) {
         usernameRef.current.value = savedUsername;
       }
-    }, []);
+      if(message){
+        if(message.includes("error")) {
+          toast.error(message);
+        } else {
+          toast.success(message);
+        }
+      }
+    }, [message]);
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
@@ -26,7 +34,6 @@ export const useLogin = () => {
   };
 
   return {
-    message,
     usernameRef,
     handleSubmit,
   }

@@ -1,6 +1,7 @@
 import { Link } from "react-router"
 import { api } from "../../config/axios/api"
 import { toast } from "react-toastify"
+import { useLogout } from "../auth/logout/useLogout";
 
 // return 400 error --> to test error handling in api.ts
 const onTestError = async() => {
@@ -15,12 +16,19 @@ const onTestSuccess = async () => {
 }
 
 const Home = () => {
+  const useLogoutMutation = useLogout();
+
+  const onTestLogout =  () => {
+   useLogoutMutation.mutate();
+  }
+  
   return (
     <div>
        <p>this is home</p>
        <Link to="/login" >go to login</Link>
        <button onClick={onTestError}>test error</button>
        <button onClick={onTestSuccess}>test success</button>
+       <button onClick={onTestLogout}>test logout</button>
     </div>
     
   )

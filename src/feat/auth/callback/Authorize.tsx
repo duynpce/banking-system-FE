@@ -7,7 +7,7 @@ const Authorize = () => {
 
   const authUrl =
     `${ROOT_API_URL}/${AUTHORIZE_URL}?` +
-    `scope=${SCOPE_READ}&` +
+    `scope=${SCOPE_READ} openid&` +
     `response_type=code&` +
     `client_id=${CLIENT_ID}&` +
     `redirect_uri=${ROOT_URL}/callback`

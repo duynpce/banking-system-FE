@@ -19,9 +19,8 @@ const refreshApi = axios.create({
   withCredentials: true,
 });
 
-export const setAccessToken = (token: string) => {
+export const setAccessToken = (token: string | null) => {
   accessToken = token;
-  api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 };
 
 export const api = axios.create({
@@ -30,13 +29,18 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const requestConfig = config as RetryableRequestConfig;
-  requestConfig.toastMessageWhenSuccess ??= null;
-  return requestConfig;
+  if (accessToken) {
+    config.headers.set("Authorization", `Bearer ${accessToken}`);
+  }
+  else{
+    config.headers.delete("Authorization");
+  }
+  return config;
 });
+    
 
 api.interceptors.response.use(
-  (response) => {
+  (response) => {   
 
     const originalRequest = response.config as RetryableRequestConfig | undefined;
     const toastMessageWhenSuccess = originalRequest?.toastMessageWhenSuccess ?? null;
@@ -45,6 +49,7 @@ api.interceptors.response.use(
       const successMessage = typeof toastMessageWhenSuccess === "string"
         ? toastMessageWhenSuccess
         : response.data?.message;
+
       if (successMessage) {
         toast.success(successMessage);
       }
@@ -71,16 +76,16 @@ api.interceptors.response.use(
          
         const res = await refreshApi.post<string>("/v1/auth/refresh-token");
         setAccessToken(res.data);
-
+        
         // Remove stale per-request auth header so defaults can apply the new token.
         if (originalRequest.headers) {
           delete (originalRequest.headers as Record<string, string>).Authorization;
         }
-
         return api(originalRequest);
       } catch {
         delete api.defaults.headers.common["Authorization"];
-        accessToken = null;
+        setAccessToken(null);
+        sessionStorage.setItem("previousPath", window.location.pathname);
         window.location.assign("/login");
       }
     } else if (error.response?.status === 403) {

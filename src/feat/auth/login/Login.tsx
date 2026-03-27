@@ -5,7 +5,6 @@ import { useLogin } from "./useLogin";
 const Login = () => {
 
   const {
-    message,
     usernameRef,
     handleSubmit
   } = useLogin();
@@ -14,7 +13,6 @@ const Login = () => {
     <form id="login-form" action={`${ROOT_API_URL}/login`} method="POST" onSubmit={handleSubmit}>
       <input type="text" name="username" placeholder="username" ref={usernameRef}/>
       <input type="password" name="password" placeholder="password" />
-      {message && <p style={{ color: "red" }}>{message}</p>}
       <button type="submit"> Login </button>
       <Link to="/">go to home</Link>
     </form> 

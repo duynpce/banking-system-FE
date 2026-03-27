@@ -51,4 +51,14 @@ export const getTrimmedDataFromForm = (formData: FormData): Record<string, unkno
   return trimObjectValues(getDataFromForm(formData));
 };
 
+export const getAlertConfig = (searchParams: URLSearchParams):string => {
+    const params = Array.from(searchParams.entries()); 
+    
+    if (params.length > 0) {
+        const [type, value] = params[0]; 
+        return `${type}: ${value}`;
+    }
+    
+    return "";
+};  
 
