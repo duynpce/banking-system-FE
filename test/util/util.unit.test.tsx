@@ -8,6 +8,7 @@ import {
   trimObjectValues,
   getDataFromForm,
   getTrimmedDataFromForm,
+  getAlertConfig,
 } from '../../src/shared/utils/util';
 
 test("test handleChange " ,  () => {
@@ -150,4 +151,19 @@ test("test getTrimmedDataFromForm", () => {
       username: "testUser",
       password: "pass123"
     });
+});
+
+test("test getAlertConfig with no params", () => {
+    const searchParams = new URL("http://localhost").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("");
+});
+
+test("test getAlertConfig with typeofOperation param", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("typeofOperation: state");
+});
+
+test("test getAlertConfig with multiple params returns first", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state&other=foo").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("typeofOperation: state");
 });
