@@ -1,24 +1,29 @@
 import {  expect, test , describe} from "vitest";
-import { getErrorMessage } from '../../../src/feat/auth/login/login.service';
+import { getMessage } from '../../../src/feat/auth/login/login.service';
 
 
-describe("test getErrorMessage", () => {
-  test("should return empty string when error is null", () => {
-    expect(getErrorMessage(null)).toBe("");
+describe("test getMessage", () => {
+  test("should return empty string when no params", () => {
+    expect(getMessage()).toBe("");
   });
 
-  test("should return correct message for invalid-credentials", () => {
-    expect(getErrorMessage("invalid-credentials"))
-      .toBe("Not existed account or incorrect password");
+  test("should return specific error for invalid-credentials", () => {
+    const searchParams = new URL("http://localhost?error=invalid-credentials").searchParams;
+    expect(getMessage(searchParams)).toBe("Not existed account or incorrect password");
   });
 
-  test("should return correct message for authentication-failed", () => {
-    expect(getErrorMessage("authentication-failed"))
-      .toBe("Authentication failed");
+  test("should return specific error for authentication-failed", () => {
+    const searchParams = new URL("http://localhost?error=authentication-failed").searchParams;
+    expect(getMessage(searchParams)).toBe("Authentication failed");
   });
 
-  test("should return unknown error for other cases", () => {
-    expect(getErrorMessage("something-else"))
-      .toBe("unknown error");
+  test("should return alert config string for non-error param", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state").searchParams;
+    expect(getMessage(searchParams)).toBe("typeofOperation: state");
+  });
+
+  test("should return first key/value for multi params using alert config", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state&other=foo").searchParams;
+    expect(getMessage(searchParams)).toBe("typeofOperation: state");
   });
 });

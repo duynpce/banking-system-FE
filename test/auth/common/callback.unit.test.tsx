@@ -19,7 +19,9 @@ describe("test handleCallback", () => {
     mockNavigate.mockReset();
     mockSetAccessToken.mockReset();
     mockGet.mockResolvedValue({
-      data: "mocked_token"
+      data:{
+        accessToken: "mocked_token"
+      }
     });
 
     await handleCallback("valid_code", mockNavigate, new AbortController().signal);
