@@ -25,7 +25,8 @@ export const useRegister = () => {
     idCardNumber: { value: "", exists: false },
     taxIdNumber: { value: "", exists: false },
   });
-  const [accountType, setAccountType] = useState(AccountType.PERSONAL);
+  
+  const [accountType, setAccountType] = useState<AccountType>(AccountType.PERSONAL);
 
   const registerMutation = useCreateAccount();
 

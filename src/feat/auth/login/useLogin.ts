@@ -9,10 +9,13 @@ export const useLogin = () => {
   const message = getMessage(searchParams);
   
   useEffect(() => {
+    // Populate username field from sessionStorage if available
       const savedUsername = sessionStorage.getItem("username");
       if (savedUsername && usernameRef.current) {
         usernameRef.current.value = savedUsername;
       }
+
+      // Display message if it exists
       if(message){
         if(message.includes("error")) {
           toast.error(message);

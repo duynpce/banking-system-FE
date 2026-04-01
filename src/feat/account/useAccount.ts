@@ -5,6 +5,7 @@ import {
 	updateAccount,
 } from "./account.service";
 import { AccountType } from './account.type';
+import { queryClient } from "../../config/userQuery.config";
 
 
 export const useCreateAccount = () => {
@@ -13,6 +14,7 @@ export const useCreateAccount = () => {
 		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
 			return createAccount(formData, accountType);
 		},
+		
 	});
 };
 
@@ -22,6 +24,9 @@ export const useUpdateAccount = () => {
 		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
 			return updateAccount(formData, accountType);
 		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["my-account"] });
+		},
 	});
 };
 
@@ -29,6 +34,7 @@ export const useUpdateAccount = () => {
 		return useQuery({
 			queryKey: ["my-account"],
 			queryFn: () => getAccount(),
+			staleTime: 10 * 60 * 1000, // 10 minutes
 		});
 	};
 

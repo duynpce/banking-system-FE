@@ -39,16 +39,23 @@ export const handleChangeExistsForUniqueDetails = <T extends Record<string, Uniq
   }));
 };
 
-export const trimObjectValues = (obj : Record<string,unknown>) => {
-  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value]));
+export const trimObjectValues = <T extends Record<string, unknown>>(obj : T): T => {
+  const trimmed = Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+  ) as T;
+
+  return trimmed;
 };
 
-export const getDataFromForm = (formData: FormData): Record<string, unknown> => {
-  return Object.fromEntries(formData.entries());
+export const getDataFromForm = <T>(formData: FormData): T => {
+  const entries = Object.fromEntries(formData.entries()) as Record<string, FormDataEntryValue>;
+
+  return entries as unknown as T;
 };
 
-export const getTrimmedDataFromForm = (formData: FormData): Record<string, unknown> => {
-  return trimObjectValues(getDataFromForm(formData));
+export const getTrimmedDataFromForm = <T extends Record<string, unknown>>(formData: FormData): T => {
+  const data = getDataFromForm<Record<string, unknown>>(formData);
+  return trimObjectValues<T>(data as T);
 };
 
 export const getAlertConfig = (searchParams: URLSearchParams):string => {

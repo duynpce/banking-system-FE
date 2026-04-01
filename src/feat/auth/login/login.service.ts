@@ -11,9 +11,9 @@ export const getMessage = (searchparams?: URLSearchParams): string => {
 
   if (type === "error") {
     if (value === "invalid-credentials") {
-      return "Not existed account or incorrect password";
+      return "error : Not existed account or incorrect password";
     } else if (value === "authentication-failed") {
-      return "Authentication failed";
+      return "error : Authentication failed";
     }
   }
 

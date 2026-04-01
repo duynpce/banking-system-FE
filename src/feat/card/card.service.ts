@@ -1,25 +1,17 @@
 import { api } from "../../config/axios/api"
-import { AccountType, type AccountDto } from "../account/account.type";
-import { getTrimmedDataFromForm } from "../../shared/utils/util";
-import type {  CardDto } from "./card.type";
-import { queryClient } from "../../config/userQuery.config";
+import { AccountType} from "../account/account.type";
+import type {  CardDto, CreateCardRequest } from "./card.type";
 
 export const apiMap = {
   [AccountType.BUSINESS]: "business-cards",
   [AccountType.PERSONAL]: "personal-cards",
-  [AccountType.GOVERNMENT]: null,// Government accounts do not have cards
+  [AccountType.GOVERNMENT]: null,// Government accounts do not have cards , validation for this is done in the schema level
 }
 
-export const createCard = async(formData: FormData) => {
-  const data = getTrimmedDataFromForm(formData);
-  const {type: accountType} = queryClient.getQueryData(["my-account"]) as AccountDto;
-  const correspondingApi = apiMap[accountType];
-  
-  if (!correspondingApi) {
-    throw new Error("government accounts do not support card creation");
-  }
+export const createCard = async(createCardRequest: CreateCardRequest, accountType: AccountType) => {
 
-  const res = await api.post(`/v1/${correspondingApi}`, data);
+  const correspondingApi = apiMap[accountType];
+  const res = await api.post(`/v1/${correspondingApi}`, createCardRequest, { toastMessageWhenSuccess: true });
   return res.data ?? null ;
 }
 

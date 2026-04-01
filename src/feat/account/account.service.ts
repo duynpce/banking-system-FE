@@ -1,6 +1,6 @@
 import { api } from "../../config/axios/api"
-import { getTrimmedDataFromForm } from "../../shared/utils/util";
-import type {AccountDto, BusinessAccountDto, CreateAccountRequest, GovernmentAccountDto, PersonalAccountDto, UpdateAccountRequest } from "./account.type";
+import { getDataFromForm } from "../../shared/utils/util";
+import type {AccountDto, BusinessAccountDto, GovernmentAccountDto, PersonalAccountDto, UpdateAccountRequest } from "./account.type";
 import { AccountType } from './account.type';
 
 const apiMap = {
@@ -12,13 +12,15 @@ const apiMap = {
 export const createAccount = async (formData: FormData, accountType: AccountType) => {
   
   const correspondingApi = apiMap[accountType];
-  const data:CreateAccountRequest =  getTrimmedDataFromForm(formData) as CreateAccountRequest;
+  const data = getDataFromForm(formData);
   return await api.post(`/v1/${correspondingApi}`, data, { toastMessageWhenSuccess: true });
+
+ 
 }
 
 export const updateAccount = async (formData: FormData, accountType: AccountType) => {
   const correspondingApi = apiMap[accountType];
-  const data:UpdateAccountRequest = getTrimmedDataFromForm(formData) as UpdateAccountRequest;
+  const data = getDataFromForm<UpdateAccountRequest>(formData) ;
   return await api.put(`/v1/${correspondingApi}`, data, { toastMessageWhenSuccess: true });
 };
 
