@@ -1,6 +1,5 @@
 import { api } from "../../config/axios/api"
-import { getDataFromForm } from "../../shared/utils/util";
-import type {AccountDto, BusinessAccountDto, GovernmentAccountDto, PersonalAccountDto, UpdateAccountRequest } from "./account.type";
+import type {AccountDto, BusinessAccountDto, GovernmentAccountDto, PersonalAccountDto , CreateAccountRequest, UpdateAccountRequest} from "./account.type";
 import { AccountType } from './account.type';
 
 const apiMap = {
@@ -9,19 +8,17 @@ const apiMap = {
     [AccountType.GOVERNMENT]: "government-accounts",
   };
 
-export const createAccount = async (formData: FormData, accountType: AccountType) => {
+export const createAccount = async (createAccountRequest: CreateAccountRequest) => {
   
-  const correspondingApi = apiMap[accountType];
-  const data = getDataFromForm(formData);
-  return await api.post(`/v1/${correspondingApi}`, data, { toastMessageWhenSuccess: true });
+  const correspondingApi = apiMap[createAccountRequest.type];
+  return await api.post(`/v1/${correspondingApi}`, createAccountRequest, { toastMessageWhenSuccess: true });
 
  
 }
 
-export const updateAccount = async (formData: FormData, accountType: AccountType) => {
-  const correspondingApi = apiMap[accountType];
-  const data = getDataFromForm<UpdateAccountRequest>(formData) ;
-  return await api.put(`/v1/${correspondingApi}`, data, { toastMessageWhenSuccess: true });
+export const updateAccount = async (updateAccountRequest: UpdateAccountRequest) => {
+  const correspondingApi = apiMap[updateAccountRequest.type];
+  return await api.put(`/v1/${correspondingApi}`, updateAccountRequest, { toastMessageWhenSuccess: true });
 };
 
 export const getAccount = async () => {

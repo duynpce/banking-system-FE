@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
-import { AccountType } from "../../account/account.type";
+import { useForm, type SubmitErrorHandler } from "react-hook-form";
+import { AccountType, createAccountRequestSchema, Gender, type CreateAccountRequest } from '../../account/account.type';
 import {
   type UniqueDetail,
   checkUniqueField,
@@ -12,6 +13,8 @@ import {
   handleChangeValueForUniqueDetails,
 } from "../../../shared/utils/util";
 import { useCreateAccount } from "../../account/useAccount";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -25,6 +28,8 @@ export const useRegister = () => {
     idCardNumber: { value: "", exists: false },
     taxIdNumber: { value: "", exists: false },
   });
+
+  const [hasAnUniqueDetailExists, setHasAnUniqueDetailExists] = useState(false);
   
   const [accountType, setAccountType] = useState<AccountType>(AccountType.PERSONAL);
 
@@ -47,31 +52,82 @@ export const useRegister = () => {
           console.error("Error checking unique field:", err);
         } finally {
           handleChangeExistsForUniqueDetails(setUniqueDetails, name, exists);
+          setHasAnUniqueDetailExists(() => {
+            //check if any unique detail exists by checking the updated uniqueDetails state with the new existence value for the current field
+            const updatedUniqueDetails = {
+              ...uniqueDetails,
+              [name]: { value, exists },
+            };
+            return Object.values(updatedUniqueDetails).some(
+              (detail) => detail.exists
+            );
+          });
         }
       }, 750),
       //ensure debounce function is only recreated when mutateUniqueFieldAsync changes
     [mutateUniqueFieldAsync]
   );
 
+  //debounce useEffect to cancel any pending debounced calls when component unmounts or when mutateUniqueFieldAsync changes to prevent memory leaks and ensure we don't update state after unmounting
   useEffect(() => {
     return () => {
       debouncedCheckUniqueField.cancel();
     };
   }, [debouncedCheckUniqueField]);
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+   const {handleSubmit, register,setValue} = useForm<CreateAccountRequest>({
+    defaultValues: {
+      username: "",
+      password: "",
+      email: "",
+      phoneNumber: "",
+      address: "",
+      fullName: "",
+      dateOfBirth: "",
+      idCardNumber: "",
+      gender: Gender.MALE,
+      organizationName: "",
+      taxIdNumber: "",
+      governmentDepartment: "",
+    },
+    resolver: zodResolver(createAccountRequestSchema),
+  });
+
+
+  //on change of account type, reset all unique details and set the type field in the form to the selected account type
+  useEffect(() => {
+    setValue("type", accountType);
+    setValue("fullName", "");
+    setValue("dateOfBirth", "");
+    setValue("idCardNumber", "");
+    setValue("gender", Gender.MALE);
+    setValue("organizationName", "");
+    setValue("taxIdNumber", "");
+    setValue("governmentDepartment", "");
+    setUniqueDetails({
+      ...uniqueDetails,
+      idCardNumber: { value: "", exists: false },
+      taxIdNumber: { value: "", exists: false },
+    });
+  }, [accountType]);
+
+  const handleRegisterRequest = (createAccountRequest: CreateAccountRequest) => {
 
     registerMutation.mutate(
-      { formData, accountType },
+      { createAccountRequest},
       {
         onSuccess: () => {
+          sessionStorage.setItem("username", createAccountRequest.username);
           navigate("/login");
         },
       }
     );
   };
+
+  const onValidationError: SubmitErrorHandler<CreateAccountRequest> = (errors) => {
+    toast.error(errors[Object.keys(errors)[0] as keyof typeof errors]?.message || "Validation error");
+  };
+
 
   const handleChangeUniqueDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -88,7 +144,12 @@ export const useRegister = () => {
     setAccountType,
     uniqueDetails,
     handleSubmit,
+    handleRegisterRequest,
     handleChangeUniqueDetails,
+    hasAnUniqueDetailExists,
     isRegisterPending: registerMutation.isPending,
+    inputRegister: register,
+    onValidationError: onValidationError,
   };
 };
+

@@ -78,6 +78,7 @@ export const baseCreateAccountSchema = z.object({
 
 export const CreatePersonalAccountRequestSchema = baseCreateAccountSchema.extend({
   type: z.literal(AccountType.PERSONAL),
+  gender : z.enum(Gender, "invalid gender"),
   fullName: z.string().min(3, "need at least 3 characters").trim(),
   idCardNumber: z.string().min(9, "need at least 9 characters").max(12, "can have at most 12 characters").trim(),
   dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "invalid date format").trim(),
@@ -85,6 +86,7 @@ export const CreatePersonalAccountRequestSchema = baseCreateAccountSchema.extend
 
 export const CreateBusinessAccountRequestSchema = baseCreateAccountSchema.extend({
   type: z.literal(AccountType.BUSINESS),
+  gender: z.enum(Gender, "invalid gender"),
   organizationName: z.string().min(3, "need at least 3 characters").trim(),
   taxIdNumber: z.string().min(10, "need at least 9 characters").max(12, "can have at most 12 characters").trim(),
 });
@@ -108,23 +110,27 @@ export type CreateGovernmentAccountRequest = z.infer<typeof CreateGovernmentAcco
 
 
 export const BaseUpdateAccountRequestSchema = z.object({
+  type: z.enum(AccountType,"invalid account type"),
   email: z.email("invalid email format").trim(),
   phoneNumber: z.string().min(10, "need at least 10 characters").max(11, "can have at most 11 characters").trim(),
   address: z.string().trim()
 });
 
 export const UpdatePersonalAccountRequestSchema = BaseUpdateAccountRequestSchema.extend({
+  type: z.literal(AccountType.PERSONAL),
   fullName: z.string().min(3, "need at least 3 characters").trim(),
   idCardNumber: z.string().min(9, "need at least 9 characters").max(12, "can have at most 12 characters").trim(),
   dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "invalid date format").trim(),
 });
 
 export const UpdateBusinessAccountRequestSchema = BaseUpdateAccountRequestSchema.extend({
+  type: z.literal(AccountType.BUSINESS),
   organizationName: z.string().min(3, "need at least 3 characters").trim(),
   taxIdNumber: z.string().min(9, "need at least 9 characters").max(12, "can have at most 12 characters").trim(),
 });
 
 export const UpdateGovernmentAccountRequestSchema = BaseUpdateAccountRequestSchema.extend({
+  type: z.literal(AccountType.GOVERNMENT),
   governmentDepartment: z.string().min(3, "need at least 3 characters").trim(),
 });
 
@@ -134,4 +140,6 @@ export const updateAccountRequestSchema = z.discriminatedUnion("type", [
   UpdateBusinessAccountRequestSchema,
   UpdateGovernmentAccountRequestSchema
 ]);
+
+export type UpdateAccountRequest = z.infer<typeof updateAccountRequestSchema>;
 

@@ -4,15 +4,15 @@ import {
 	getAccount,
 	updateAccount,
 } from "./account.service";
-import { AccountType } from './account.type';
+import { type CreateAccountRequest, type UpdateAccountRequest } from './account.type';
 import { queryClient } from "../../config/userQuery.config";
 
 
 export const useCreateAccount = () => {
 	return useMutation({
 		mutationKey: ["create-account"],
-		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
-			return createAccount(formData, accountType);
+		mutationFn: ({ createAccountRequest }: { createAccountRequest: CreateAccountRequest }) => {
+			return createAccount(createAccountRequest);
 		},
 		
 	});
@@ -21,8 +21,8 @@ export const useCreateAccount = () => {
 export const useUpdateAccount = () => {
 	return useMutation({
 		mutationKey: ["update-account"],
-		mutationFn: ({ formData, accountType }: { formData: FormData; accountType: AccountType }) => {
-			return updateAccount(formData, accountType);
+		mutationFn: ({ updateAccountRequest }: { updateAccountRequest: UpdateAccountRequest }) => {
+			return updateAccount(updateAccountRequest);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["my-account"] });
