@@ -9,12 +9,12 @@ describe("test getMessage", () => {
 
   test("should return specific error for invalid-credentials", () => {
     const searchParams = new URL("http://localhost?error=invalid-credentials").searchParams;
-    expect(getMessage(searchParams)).toBe("Not existed account or incorrect password");
+    expect(getMessage(searchParams)).toBe("error: Not existed account or incorrect password");
   });
 
   test("should return specific error for authentication-failed", () => {
     const searchParams = new URL("http://localhost?error=authentication-failed").searchParams;
-    expect(getMessage(searchParams)).toBe("Authentication failed");
+    expect(getMessage(searchParams)).toBe("error: Authentication failed");
   });
 
   test("should return alert config string for non-error param", () => {

@@ -7,19 +7,18 @@ const Register = () => {
     accountType,
     setAccountType,
     uniqueDetails,
-    handleSubmit,
+    handleSmartSubmit,
     handleRegisterRequest,
     handleChangeUniqueDetails,
     hasAnUniqueDetailExists,
     isRegisterPending,
     inputRegister,
-    onValidationError,
   } = useRegister(); 
 
   return (
     <div className="max-w-2xl mx-auto p-4">
       <Card title="" innerClassName="bg-white shadow-lg">
-        <form onSubmit={handleSubmit((createAccountRequest) => handleRegisterRequest(createAccountRequest), onValidationError)} name="register-form" className="space-y-6">
+        <form onSubmit={handleSmartSubmit((createAccountRequest) => handleRegisterRequest(createAccountRequest))} name="register-form" className="space-y-6">
           
           {/* Account Type Selection */}
           <div>
@@ -181,6 +180,7 @@ const Register = () => {
                   <span className="text-gray-700 font-medium">Date of Birth</span>
                   <input
                     {...inputRegister("dateOfBirth")}
+                    aria-label="date of birth"
                     type="date"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -216,6 +216,7 @@ const Register = () => {
                   <span className="text-gray-700 font-medium">Gender</span>
                   <select
                     {...inputRegister("gender")}
+                    aria-label="gender"
                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   >

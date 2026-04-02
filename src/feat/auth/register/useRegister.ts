@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
-import { useForm, type SubmitErrorHandler } from "react-hook-form";
 import { AccountType, createAccountRequestSchema, Gender, type CreateAccountRequest } from '../../account/account.type';
 import {
   type UniqueDetail,
@@ -14,7 +13,7 @@ import {
 } from "../../../shared/utils/util";
 import { useCreateAccount } from "../../account/useAccount";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { useFormCustom } from "../../../shared/hook/useFormCustom";
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -75,7 +74,7 @@ export const useRegister = () => {
     };
   }, [debouncedCheckUniqueField]);
 
-   const {handleSubmit, register,setValue} = useForm<CreateAccountRequest>({
+  const {handleSmartSubmit, register, setValue} = useFormCustom<CreateAccountRequest>({
     defaultValues: {
       username: "",
       password: "",
@@ -92,7 +91,6 @@ export const useRegister = () => {
     },
     resolver: zodResolver(createAccountRequestSchema),
   });
-
 
   //on change of account type, reset all unique details and set the type field in the form to the selected account type
   useEffect(() => {
@@ -124,11 +122,6 @@ export const useRegister = () => {
     );
   };
 
-  const onValidationError: SubmitErrorHandler<CreateAccountRequest> = (errors) => {
-    toast.error(errors[Object.keys(errors)[0] as keyof typeof errors]?.message || "Validation error");
-  };
-
-
   const handleChangeUniqueDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -143,13 +136,12 @@ export const useRegister = () => {
     accountType,
     setAccountType,
     uniqueDetails,
-    handleSubmit,
+    handleSmartSubmit,
     handleRegisterRequest,
     handleChangeUniqueDetails,
     hasAnUniqueDetailExists,
     isRegisterPending: registerMutation.isPending,
     inputRegister: register,
-    onValidationError: onValidationError,
   };
 };
 
