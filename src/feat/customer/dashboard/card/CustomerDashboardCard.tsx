@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Card from "../../../shared/component/Card";
-import Button from "../../../shared/component/Button";
+import Button from "../../../../shared/component/Button";
+import Card from "../../../../shared/component/Card";
 
 type CardType = "Credit" | "Debit";
 
