@@ -19,7 +19,7 @@ export interface CardDto {
 
 export const BaseCardRequestSchema = z.object({
   forAccountType : z.enum(AccountType, "For account type:invalid account type").refine((val) => val !== AccountType.GOVERNMENT, {
-    message: "Government accounts do not support card creation",}),
+  message: "Government accounts do not support card creation",}),
   privilegeCode: z.string().trim().toUpperCase(),
   type: z.enum(CardType, "Card type:invalid card type"),
   pinCode: z.string().length(6, "PIN code: must be exactly 6 characters").trim(),

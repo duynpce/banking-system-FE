@@ -8,9 +8,9 @@ export const apiMap = {
   [AccountType.GOVERNMENT]: null,// Government accounts do not have cards , validation for this is done in the schema level
 }
 
-export const createCard = async(createCardRequest: CreateCardRequest, accountType: AccountType) => {
+export const createCard = async(createCardRequest: CreateCardRequest) => {
 
-  const correspondingApi = apiMap[accountType];
+  const correspondingApi = apiMap[createCardRequest.forAccountType];
   const res = await api.post(`/v1/${correspondingApi}`, createCardRequest, { toastMessageWhenSuccess: true });
   return res.data ?? null ;
 }
