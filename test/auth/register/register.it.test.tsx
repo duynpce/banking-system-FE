@@ -58,33 +58,34 @@ describe('Register component', () => {
   };
 
   it('success, should show success toast message', async () => {
+
     const user = userEvent.setup();
     const toastSuccessSpy = vi
       .spyOn(toast, 'success')
       .mockImplementation(() => 'mock-toast-id');
     renderRegisterPage();
  
-    await user.type(screen.getByPlaceholderText("Username"), "valid_username");
-    await user.type(screen.getByPlaceholderText("Password"), "valid_password");
-    await user.type(screen.getByPlaceholderText("Email"), "valid_username@example.com");
-    await user.type(screen.getByPlaceholderText("Phone Number"), "valid_phone_number");
-    await user.type(screen.getByPlaceholderText("Address"), "valid_address");
-    await user.type(screen.getByPlaceholderText("Full name"), "Valid_full_name");
-    await user.type(screen.getByPlaceholderText("Id card number"), "123456789");
+    await user.type(screen.getByPlaceholderText("Enter username"), "valid_username");
+    await user.type(screen.getByPlaceholderText("Enter password"), "valid_password1A@");
+    await user.type(screen.getByPlaceholderText("Enter email"), "valid_username@example.com");
+    await user.type(screen.getByPlaceholderText("Enter phone number"), "1234567890");
+    await user.type(screen.getByPlaceholderText("Enter address"), "valid_address");
+    await user.type(screen.getByPlaceholderText("Enter full name"), "Valid_full_name");
+    await user.type(screen.getByPlaceholderText("Enter ID card number (9-12 digits)"), "1234567890");
     fireEvent.change(screen.getByLabelText("date of birth"), { target: { value: "2000-01-01" } });
     await user.selectOptions(screen.getByLabelText("gender"), "MALE");
-    await user.click(screen.getByText("register"));
+    await user.click(screen.getByText("Register"));
     await delay(1000);
 
     await waitFor(() => expect(toastSuccessSpy).toHaveBeenCalledWith("registered successfully"));
-  }, 10000); 
+  }, 10000 ); //10000 is time out
 
   it('should show error message when username is already taken before submit', async () => {
     const user = userEvent.setup();
     renderRegisterPage();
-    await user.type(screen.getByPlaceholderText("Username"), "existed_username");
-    expect(await screen.findByText("existed username", {}, { timeout: 3000 })).toBeInTheDocument();
-
+    await user.type(screen.getByPlaceholderText("Enter username"), "existed_username");
+    expect(await screen.findByText("Username already exists", {}, { timeout: 3000 })).toBeInTheDocument();
+    expect(screen.getByText("Register")).toBeDisabled();
 
   });
 });

@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createCard, getCard, getCards } from "./card.service";
+import type { CreateCardRequest } from './card.type';
 
-  export const useCreateCard = (formData: FormData) => {
+  export const useCreateCard = (createCardRequest: CreateCardRequest) => {
    return useMutation({
     mutationKey: ["create-card"],
-    mutationFn: () => createCard(formData),
+    mutationFn: () => createCard(createCardRequest),
    })
   }
 

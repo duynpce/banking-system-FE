@@ -68,26 +68,31 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+
+    if (error.response?.status === 401 && originalRequest) {
       // Retry at most once after refresh to prevent infinite loops.
       originalRequest._retry = true;
-
-      try {
-         
-        const res = await refreshApi.post<string>("/v1/auth/refresh-token");
-        setAccessToken(res.data);
-        
-        // Remove stale per-request auth header so defaults can apply the new token.
-        if (originalRequest.headers) {
-          delete (originalRequest.headers as Record<string, string>).Authorization;
-        }
-        return api(originalRequest);
-      } catch {
+      
+      if(originalRequest._retry) {
+        toast.error("expried sesssion or not logged in", {
+          onClose: () => window.location.assign("/login"),
+          autoClose: 2000, 
+        });
+        console.log("refresh token failed")
         delete api.defaults.headers.common["Authorization"];
         setAccessToken(null);
         sessionStorage.setItem("previousPath", window.location.pathname);
-        window.location.assign("/login");
+        return Promise.reject(error);
       }
+        const res = await refreshApi.post<string>("/v1/auth/refresh-token");
+        setAccessToken(res.data);
+        
+      // Remove stale per-request auth header so defaults can apply the new token.
+      if (originalRequest.headers) {
+        delete (originalRequest.headers as Record<string, string>).Authorization;
+      }
+      return api(originalRequest);
+     
     } else if (error.response?.status === 403) {
       toast.error("You don't have permission to access this resource.");
     } else if(error.response?.status === 408) {
