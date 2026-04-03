@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
 import Button from "../../../../shared/component/Button";
 import Card from "../../../../shared/component/Card";
 import LoadingSpinner from "../../../../shared/component/LoadingSpinner";
 import PaginationBar from "../../../../shared/component/PaginationBar";
 import { useCustomerDashboardCard } from "./useCustomerDashBoardCard";
 import { CardType } from "../../../card/card.type";
+import { useMemo, useState } from "react";
 
 const CARD_ICON_STYLES = [
   { iconBg: "bg-blue-100", iconText: "text-blue-500" },
@@ -20,7 +20,6 @@ const CustomerDashboardCard = () => {
     handleSmartSubmit,
     handlerCreateCard,
     register,
-    setValue,
     setCardPage,
     cards,
     cardsMetaData,

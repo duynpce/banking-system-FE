@@ -64,7 +64,7 @@ export const useRegister = () => {
         }
       }, 750),
       //ensure debounce function is only recreated when mutateUniqueFieldAsync changes
-    [mutateUniqueFieldAsync, uniqueDetails]
+    [mutateUniqueFieldAsync]
   );
 
   //debounce useEffect to cancel any pending debounced calls when component unmounts or when mutateUniqueFieldAsync changes to prevent memory leaks and ensure we don't update state after unmounting

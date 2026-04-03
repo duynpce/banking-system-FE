@@ -1,4 +1,4 @@
-import { CreateCardRequestSchema, type CardDto, type CreateCardRequest } from '../../../card/card.type';
+import { CreateCardRequestSchema, type CreateCardRequest } from '../../../card/card.type';
 import { useCreateCard, useGetCardsQuery } from '../../../card/useCard';
 import { useFormCustom } from '../../../../shared/hook/useFormCustom';
 import { zodResolver } from '@hookform/resolvers/zod';
