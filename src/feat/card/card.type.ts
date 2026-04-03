@@ -22,7 +22,7 @@ export const BaseCardRequestSchema = z.object({
   message: "Government accounts do not support card creation",}),
   privilegeCode: z.string().trim().toUpperCase(),
   type: z.enum(CardType, "Card type:invalid card type"),
-  pinCode: z.string().length(6, "PIN code: must be exactly 6 characters").trim(),
+  pinCode: z.string().length(6, "PIN code: must be exactly 6 characters").regex(/^\d{6}$/, "PIN code: must contain only digits").trim(),
 });
 
 export const CreatePersonalCardRequestSchema = BaseCardRequestSchema.extend({

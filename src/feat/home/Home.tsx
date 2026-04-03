@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { api } from "../../config/axios/api"
+import { api, getAccessToken } from "../../config/axios/api"
 import { toast } from "react-toastify"
 import { useLogout } from "../auth/logout/useLogout";
 

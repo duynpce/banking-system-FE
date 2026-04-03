@@ -24,6 +24,6 @@ export const getCards = async(page: number, limit: number) => {
   const res = await api.get<CardDto[]>("/v1/cards", {
     params: { page, limit }
   });
-  return res.data ?? null ;
+  return res ?? null ;
 }
 

@@ -82,15 +82,21 @@ export const CreatePersonalAccountRequestSchema = baseCreateAccountSchema.extend
   type: z.literal(AccountType.PERSONAL),
   gender : z.enum(Gender, "Gender:invalid gender"),
   fullName: z.string().min(3, "Full name:need at least 3 characters").trim(),
-  idCardNumber: z.string().min(9, "Id card number:need at least 9 characters").max(12, "Id card number:can have at most 12 characters").trim(),
-  dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "Date of birth:invalid date format").trim(),
+  idCardNumber: z.string().min(9, "Id card number:need at least 9 characters").max(15, "Id card number:can have at most 15 characters").trim(),
+  dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "Date of birth:invalid date format").trim()
+  // .check((dateOfBirth) => {
+  //   const today = new Date();
+  //   const birthDate = new Date(dateOfBirth);
+  //   const age = today.getFullYear() - birthDate.getFullYear();
+  //   return age >= 18;
+  // }, "Date of birth:must be at least 18 years old")
 });
 
 export const CreateBusinessAccountRequestSchema = baseCreateAccountSchema.extend({
   type: z.literal(AccountType.BUSINESS),
   gender: z.enum(Gender, "Gender:invalid gender"),
   organizationName: z.string().min(3, "Organization name:need at least 3 characters").trim(),
-  taxIdNumber: z.string().min(10, "Tax id number:need at least 10 characters").max(12, "Tax id number:can have at most 12 characters").trim(),
+  taxIdNumber: z.string().min(10, "Tax id number:need at least 10 characters").max(15, "Tax id number:can have at most 15 characters").trim(),
 });
 
 export const CreateGovernmentAccountRequestSchema = baseCreateAccountSchema.extend({
