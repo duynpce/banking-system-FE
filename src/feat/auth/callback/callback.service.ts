@@ -2,14 +2,14 @@ import { CALLBACK_URL } from "../../../shared/constant/constant";
 import { api, setAccessToken } from "../../../config/axios/api";
 import type { NavigateFunction } from "react-router-dom";
 
-export interface CallbackDto{
+export interface getTokenDto{
  accessToken: string;
  idToken: string;
 }
 
 export const handleCallback = async (code : string, navigate: NavigateFunction, signal: AbortSignal) => {
       try {
-        const res = await api.get<CallbackDto>(`/${CALLBACK_URL}?code=${encodeURIComponent(code)}`, {
+        const res = await api.get<getTokenDto>(`/${CALLBACK_URL}?code=${encodeURIComponent(code)}`, {
           toastMessageWhenSuccess: true,
           signal,
         });

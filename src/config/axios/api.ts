@@ -2,6 +2,7 @@ import axios from "axios";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { ROOT_API_URL } from "../../shared/constant/constant";
 import { toast } from "react-toastify";
+import type { getTokenDto } from "../../feat/auth/callback/callback.service";
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
@@ -39,6 +40,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
     
+refreshApi.interceptors.response.use(
+  (response) => {   
+
+    // becasue api will return AxiosResponse<ResponseDto<T>>
+    // response.data is to take out the ResponseDto<T>
+    return response.data;
+  }
+);
+
 
 api.interceptors.response.use(
   (response) => {   
@@ -72,7 +82,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && originalRequest) {
       // Retry at most once after refresh to prevent infinite loops.
-      originalRequest._retry = true;
+      
       
       if(originalRequest._retry) {
         toast.error("expried sesssion or not logged in", {
@@ -85,14 +95,31 @@ api.interceptors.response.use(
         sessionStorage.setItem("previousPath", window.location.pathname);
         return Promise.reject(error);
       }
-        const res = await refreshApi.post<string>("/v1/auth/refresh-token");
-        setAccessToken(res.data);
-        
-      // Remove stale per-request auth header so defaults can apply the new token.
-      if (originalRequest.headers) {
-        delete (originalRequest.headers as Record<string, string>).Authorization;
+
+      originalRequest._retry = true;
+
+      try {
+        const res = await refreshApi.post<getTokenDto>("/v1/auth/refresh-token",null);
+      
+        setAccessToken(res.data.accessToken);
+        sessionStorage.setItem("idToken", res.data.idToken);
+
+        // Remove stale per-request auth header so interceptor can apply the new token.
+        if (originalRequest.headers) {
+          delete (originalRequest.headers as Record<string, string>).Authorization;
+        }
+
+        return api(originalRequest);
+      } catch (refreshError) {
+        toast.error("expried sesssion or not logged in", {
+          onClose: () => window.location.assign("/login"),
+          autoClose: 2000,
+        });
+        delete api.defaults.headers.common["Authorization"];
+        setAccessToken(null);
+        sessionStorage.setItem("previousPath", window.location.pathname);
+        return Promise.reject(refreshError);
       }
-      return api(originalRequest);
      
     } else if (error.response?.status === 403) {
       toast.error("You don't have permission to access this resource.");
@@ -108,5 +135,7 @@ api.interceptors.response.use(
       toast.error(error.response?.data?.message || "An error occurred. Please try again.");
       
     }
+
+    return Promise.reject(error);
   }
 );
