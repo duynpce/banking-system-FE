@@ -66,17 +66,17 @@ const CustomerDashboardCard = () => {
 
               <div className="flex flex-col w-32">
                 <span className="text-xs text-gray-400">Card Type</span>
-                <span className="text-sm font-medium text-blue-500">{formatCardType(card.cardType)}</span>
+                <span className="text-sm font-medium text-blue-500">{formatCardType(card.type)}</span>
               </div>
 
               <div className="flex flex-col w-40">
                 <span className="text-xs text-gray-400">Card Number</span>
-                <span className="text-sm font-medium text-blue-500">{card.cardNumber}</span>
+                <span className="text-sm font-medium text-blue-500">{card.number}</span>
               </div>
 
               <div className="flex flex-col w-36">
                 <span className="text-xs text-gray-400">Card Holder</span>
-                <span className="text-sm font-medium text-blue-500">{card.cardHolder}</span>
+                <span className="text-sm font-medium text-blue-500">{card.holder}</span>
               </div>
 
               <div className="ml-auto flex items-center gap-4 text-sm font-medium text-blue-600">

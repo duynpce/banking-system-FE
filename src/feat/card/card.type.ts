@@ -10,11 +10,12 @@ export type CardType = typeof CardType[keyof typeof CardType];
 
 export interface CardDto {
   id: string;
-  cardNumber: string;
-  cardType: CardType;
-  expiryDate: string;
+  number: string;
+  type: CardType;
+  expirationDate: string;
   privilege: string;
-  cardHolder: string;
+  holder: string;
+  balance: number;
 }
 
 export const BaseCardRequestSchema = z.object({

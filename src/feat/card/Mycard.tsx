@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Card from "../../shared/component/Card";
 import InfoItem from "../../shared/component/InfoItem";
 import { useGetCardQuery } from "./useCard";
+import { ca } from "zod/v4/locales";
 
 interface MyCardProps  {
   className?: string;
@@ -19,12 +20,12 @@ const Mycard = ({ className, innerClassName }: MyCardProps) => {
         <section className="grid grid-cols-2 h-full items-center">
           {card ? (
             <>
-              <InfoItem title="Card Id" value={card.id} />
-              <InfoItem title="Card number" value={card.cardNumber} />
-              <InfoItem title="Card type" value={card.cardType} />
-              <InfoItem title="Expiry date" value={card.expiryDate} />
-              <InfoItem title="Card holder" value={card.cardHolder} />
+              <InfoItem title="Card number" value={card.number} />
+              <InfoItem title="Card type" value={card.type} />
+              <InfoItem title="Expiry date" value={card.expirationDate} />
+              <InfoItem title="Card holder" value={card.holder} />
               <InfoItem title="Privilege" value={card.privilege} />
+              <InfoItem title="balance" value={card.balance.toFixed(4)} />
               <Link to="/dashboard/cards" className="justify-self-start"> 
                 View all cards
               </Link>
