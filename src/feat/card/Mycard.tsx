@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Card from "../../shared/component/Card";
 import InfoItem from "../../shared/component/InfoItem";
 import { useGetCardQuery } from "./useCard";
-import { ca } from "zod/v4/locales";
 
 interface MyCardProps  {
   className?: string;

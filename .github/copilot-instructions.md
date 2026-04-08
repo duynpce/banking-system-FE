@@ -322,13 +322,14 @@ describe("card integration", () => {
 # commit
     - Use Conventional Commits (feat:, fix:, chore:, refactor:)
     - Write simple, clear, and concise commit messages that describe the changes made
+    - use - to separate different points in the commit message if needed
     - If there is a conflict, tell me before resolving it and explain why your solution is the best
         - Sample commit for feature:
             `feat: add card privilege feature module`
-            Add card privilege DTO/schema with zod validation, service layer CRUD functions, and React Query hooks for create/update/delete/get/list workflows.
+            - Add card privilege DTO/schema with zod validation, service layer CRUD functions, and React Query hooks for create/update/delete/get/list workflows.
         - Sample commit for card-privilege tests:
             `test: update tests for card-privilege`
-            Add unit tests for card privilege service methods and integration tests for create privilege form workflow with mocked backend success/failure responses.
+            - Add unit tests for card privilege service methods and integration tests for create privilege form workflow with mocked backend success/failure responses.
 
 # context 
     - read the api.local.json for backend API details
