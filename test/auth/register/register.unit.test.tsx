@@ -16,41 +16,6 @@ vi.mock("../../../src/config/axios/api", () => ({
 const mockGet = api.get as Mock;
 
 
-// temp , this will be move to account service test file later
-// describe("test handleRegister", () => {
-//   test("success", async() => {
-//     const formData = new FormData();
-    
-//     mockPost.mockResolvedValue({
-//       message: "create business account successfully"
-//     })
-
-//     const result = await handleRegister(AccountType.BUSINESS,formData);
-
-//     expect(result).toEqual("create business account successfully");
-//     expect(mockPost).toBeCalledTimes(1);
-
-//   })
-
-//   test("failed", async() => {
-//     const formData = new FormData();
-    
-//     const axiosError = new AxiosError();
-//     axiosError.message = "invalid password";
-//     mockPost.mockRejectedValue(axiosError);
-
-//     try {
-//       await handleRegister(AccountType.BUSINESS,formData);
-//     }
-//     catch(err) {
-//       const error = err as Error;
-//       expect(error.message).toEqual("invalid password");
-//     }
-
-//     expect(mockPost).toBeCalledTimes(1);
-
-//   })  
-// })
 
 describe("test checkUniqueField", () => {
   test("success", async() => {
