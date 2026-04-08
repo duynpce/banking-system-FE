@@ -1,0 +1,49 @@
+import { api } from "../../config/axios/api";
+import type {
+	CardPrivilegeDto,
+	CreateCardPrivilegeRequest,
+	DeleteCardPrivilegeRequest,
+	GetCardPrivilegesQueryRequest,
+	UpdateCardPrivilegeRequest,
+} from "./card.privilege.type";
+
+export const createCardPrivilege = async (createCardPrivilegeRequest: CreateCardPrivilegeRequest) => {
+	const res = await api.post<string>("/v1/card-privileges", createCardPrivilegeRequest, {
+		toastMessageWhenSuccess: true,
+	});
+	return res.data ?? null;
+};
+
+export const updateCardPrivilege = async (updateCardPrivilegeRequest: UpdateCardPrivilegeRequest) => {
+	const res = await api.put<string>("/v1/card-privileges", updateCardPrivilegeRequest, {
+		toastMessageWhenSuccess: true,
+	});
+	return res.data ?? null;
+};
+
+export const getCardPrivileges = async (query: GetCardPrivilegesQueryRequest) => {
+	const res = await api.get<CardPrivilegeDto[]>("/v1/card-privileges", {
+		params: query,
+	});
+	return res.data ?? [];
+};
+
+export const getCardPrivilegeById = async (id: number) => {
+	const res = await api.get<CardPrivilegeDto>(`/v1/card-privileges/${id}`);
+	return res.data ?? null;
+};
+
+export const deleteCardPrivilege = async (request: DeleteCardPrivilegeRequest) => {
+	const res = await api.delete<string>("/v1/card-privileges", {
+		params: request,
+		toastMessageWhenSuccess: true,
+	});
+	return res.data ?? null;
+};
+
+export const deleteCardPrivilegeById = async (id: number) => {
+	const res = await api.delete<string>(`/v1/card-privileges/${id}`, {
+		toastMessageWhenSuccess: true,
+	});
+	return res.data ?? null;
+};
