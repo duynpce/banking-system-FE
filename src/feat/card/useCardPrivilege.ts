@@ -4,7 +4,9 @@ import {
 	deleteCardPrivilege,
 	deleteCardPrivilegeById,
 	getCardPrivilegeById,
-	getCardPrivileges,
+	getCardPrivilegesByCardTypeAndAccountTypeQuery,
+	getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery,
+	getCardPrivilegesWithPagination,
 	updateCardPrivilege,
 } from "./card.privilege.service";
 import type {
@@ -53,10 +55,28 @@ export const useGetCardPrivilegeByIdQuery = (id: number) => {
 	});
 };
 
-export const useGetCardPrivilegesQuery = (query: GetCardPrivilegesQueryRequest) => {
+export const useGetCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery = (request: GetCardPrivilegesQueryRequest) => {
 	return useQuery({
-		queryKey: ["card-privileges", query.page, query.limit, query.code, query.accountType, query.cardType],
-		queryFn: () => getCardPrivileges(query),
-		enabled: query.code.trim().length > 0,
+		queryKey: ["card-privileges", request.code, request.accountType, request.cardType],
+		queryFn: () => getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery(request),
+		enabled: request.code.trim().length > 0,
 	});
 };
+
+export const useGetCardPrivilegesByAccountTypeAndCardTypeQuery = (accountType: string, cardType: string) => {
+	return useQuery({
+		queryKey: ["card-privileges", accountType, cardType],
+		queryFn: () => getCardPrivilegesByCardTypeAndAccountTypeQuery(accountType, cardType),
+		enabled: accountType.trim().length > 0 && cardType.trim().length > 0,
+	});
+}
+
+export const useGetCardPrivilegesQueryWithPagination = ( page: number, limit: number) => {
+	return useQuery({
+		queryKey: ["card-privileges", page, limit],
+		queryFn: () => getCardPrivilegesWithPagination(page, limit),
+		enabled: Number.isFinite(page) && page >= 0 && Number.isFinite(limit) && limit > 0,
+	});
+}
+
+

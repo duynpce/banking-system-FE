@@ -4,7 +4,8 @@ import LoadingSpinner from "../../../../shared/component/LoadingSpinner";
 import PaginationBar from "../../../../shared/component/PaginationBar";
 import { useCustomerDashboardCard } from "./useCustomerDashBoardCard";
 import { CardType } from "../../../card/card.type";
-import { useMemo, useState } from "react";
+import Modal from "../../../../shared/component/Modal";
+import Mycard from "../../../card/Mycard";
 
 const CARD_ICON_STYLES = [
   { iconBg: "bg-blue-100", iconText: "text-blue-500" },
@@ -20,26 +21,31 @@ const CustomerDashboardCard = () => {
     handleSmartSubmit,
     handlerCreateCard,
     register,
+    getValues,
     setCardPage,
     cards,
     cardsMetaData,
     isCardsLoading,
     isCardsFetching,
-    mockAnnualFees,
-    mockExpirationDate,
-    mockPrivileges,
+    setCardType,
+    cardType,
+    estimatedExpirationDate,
+    selectedPrivilege,
+    setSelectedPrivilege,
+    selectedCardDetail,
+    privileges,
+    isPrivilegesLoading,
+    isOpenCardDetailModal,
+    openCardDetailModal,
+    closeCardDetailModal,
+    isCreateCardConfirmationModalOpen,
+    setIsCreateCardConfirmationModalOpen,
+    closeCreateCardConfirmationModal,
+    handleConfirmPinCode,
+    isPinCodeConfirmed,
   } = useCustomerDashboardCard();
 
-  const [selectedPrivilege, setSelectedPrivilege] = useState<(typeof mockPrivileges)[number]>(mockPrivileges[0]);
-
   const totalPage = cardsMetaData?.totalPages ?? 1;
-  const annualFee = mockAnnualFees[selectedPrivilege];
-  const estimatedExpiryDate = useMemo(() => {
-    const expiryYears = mockExpirationDate[selectedPrivilege.toLowerCase() as keyof typeof mockExpirationDate];
-    const date = new Date();
-    date.setFullYear(date.getFullYear() + expiryYears);
-    return date.toISOString().split("T")[0];
-  }, [mockExpirationDate, selectedPrivilege]);
 
   const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-blue-300 bg-white";
 
@@ -66,7 +72,7 @@ const CustomerDashboardCard = () => {
 
               <div className="flex flex-col w-32">
                 <span className="text-xs text-gray-400">Card Type</span>
-                <span className="text-sm font-medium text-blue-500">{formatCardType(card.type)}</span>
+                <span className="text-sm font-medium text-blue-500">{card.type}</span>
               </div>
 
               <div className="flex flex-col w-40">
@@ -80,95 +86,178 @@ const CustomerDashboardCard = () => {
               </div>
 
               <div className="ml-auto flex items-center gap-4 text-sm font-medium text-blue-600">
-                <button className="hover:underline">View Details</button>
+                <button className="hover:underline" onClick={() => openCardDetailModal(card)}>
+                  View Details
+                </button>
               </div>
             </div>
           );
         })}
 
-        {totalPage > 1 && (
-          <PaginationBar totalPage={totalPage} setPage={setCardPage} />
-        )}
+        <Modal
+          isOpen={isOpenCardDetailModal}
+          onClose={closeCardDetailModal}
+          title="Card Details"
+        >
+          <Mycard card={selectedCardDetail}></Mycard>
+        </Modal>
+                
+        <PaginationBar totalPage={totalPage} setPage={setCardPage} currentPageData={cardsMetaData?.currentPage}/>
       </Card>
 
       <Card title="Add New Card" className="col-span-12" innerClassName="bg-white">
-        <form onSubmit={handleSmartSubmit((createCardRequest) => handlerCreateCard(createCardRequest))} className="grid grid-cols-2 gap-6">
-          <input type="hidden" value={accountType ?? "PERSONAL"} {...register("forAccountType")} />
-
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Card Type</label>
-            <select className={inputClass} defaultValue={CardType.CREDIT} {...register("type")}>
-              {Object.values(CardType).map((cardType) => (
-                <option key={cardType} value={cardType}>
-                  {formatCardType(cardType)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-            {accountType === "BUSINESS" && (
+        {isPrivilegesLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <form onSubmit={handleSmartSubmit((createCardRequest) => handlerCreateCard(createCardRequest))} className="grid grid-cols-2 gap-6" id="create-card-form">
+              <input type="hidden" value={accountType ?? "PERSONAL"} {...register("forAccountType")} />
               <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-600">Card Holder</label>
+                <label className="text-sm text-gray-600">Card Type</label>
+                <select className={inputClass} defaultValue={cardType} {...register("type")}
+                  onChange={(e) => {
+                    setCardType(e.target.value as CardType);
+                    setSelectedPrivilege(privileges?.[0]);
+                  }}>
+                  {Object.values(CardType).map((cardType) => (
+                    <option key={cardType} value={cardType}>
+                      {formatCardType(cardType)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {accountType === "BUSINESS" && (
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm text-gray-600">Card Holder</label>
+                  <input
+                    className={inputClass}
+                    placeholder="My Cards"
+                    {...register("holder")}
+                  />
+                </div>)
+              }
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm text-gray-600" >Card Privilege</label>
+                {(!privileges || privileges.length === 0) ? (
+                  <p className="text-sm text-gray-500">No privileges available , cannot create card</p>
+                ) :
+                  (<select
+                    className={inputClass}
+                    value={selectedPrivilege?.privilegeCode}
+                    {...register("privilegeCode", {
+                    })}
+                    onChange={(e) => setSelectedPrivilege(privileges?.find((p) => p.privilegeCode === e.target.value))}
+                  >
+                    {privileges?.map((p) => (
+                      <option key={p.privilegeCode} value={p.privilegeCode}>
+                        {p.privilegeCode}
+                      </option>
+                    ))}
+                  </select>)
+                }
+
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm text-gray-600">Expiration Date</label>
                 <input
+                  type="date"
                   className={inputClass}
-                  placeholder="My Cards"
-              {...register("holder")}
-            /></div>)
-            }
+                  value={estimatedExpirationDate ?? "N/A"}
+                  readOnly
+                />
+              </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Card Privilege</label>
-            <select
-              className={inputClass}
-              defaultValue={mockPrivileges[0]}
-              {...register("privilegeCode", {
-                onChange: (event) => {
-                  setSelectedPrivilege(event.target.value as (typeof mockPrivileges)[number]);
-                },
-              })}
+              <div className="flex flex-col gap-1 ">
+                <label className="text-sm text-gray-600">Annual Fee ($) / Year</label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={selectedPrivilege?.annualFee ?? "N/A"}
+                  readOnly
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 ">
+                <label className="text-sm text-gray-600">Cash Back Rate (%)</label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={selectedPrivilege?.cashbackRate ?? "N/A"}
+                  readOnly
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 ">
+                <label className="text-sm text-gray-600">Spending Limit (Daily)</label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={selectedPrivilege?.spendingLimitDaily ?? "N/A"}
+                  readOnly
+                />
+              </div>
+
+
+              <div className="flex flex-col gap-1 ">
+                <label className="text-sm text-gray-600">Pin Code</label>
+                <input
+                  type="password"
+                  className={inputClass}
+                  placeholder="Enter 6-digit pin code"
+                  {...register("pinCode")}
+                  maxLength={6}
+                />
+              </div>
+
+              <Button type="button" onClick={() => {
+                setIsCreateCardConfirmationModalOpen(true);
+                sessionStorage.setItem("confirm-pin-code", getValues("pinCode"));
+              }} content="Add Card" />
+            </form>
+
+            <Modal
+              isOpen={isCreateCardConfirmationModalOpen}
+              onClose={closeCreateCardConfirmationModal}
+              title="Confirm Card Creation"
             >
-              {mockPrivileges.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
-          </div>
+              {isPinCodeConfirmed ?
+                (
+                  <div className="flex flex-col gap-4">
+                    <span>Pin code confirmed. Click confirm to create the card.</span>
+                    <Button type="submit" content="Confirm" form="create-card-form" className="w-1/2 self-center   rounded-xl px-6 bg-blue-500 hover:bg-blue-600" />
+                  </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Expiration Date</label>
-            <input
-              type="date"
-              className={inputClass}
-              value={estimatedExpiryDate}
-              readOnly
-            />
-          </div>
+                ) :
+                (
+                  <div className="flex flex-col gap-4">
+                    <p className="mb-4">Please re-enter the pin code to confirm card creation.</p>
+                    <input
+                      type="password"
+                      className={inputClass}
+                      placeholder="Enter 6-digit pin code"
+                      defaultValue=""
+                      id="confirm-pin-code-input"
+                      maxLength={6}
+                    />
+                    <div className="flex justify-end gap-4 mt-6">
+                      <Button
+                        onClick={closeCreateCardConfirmationModal}
+                        content="Cancel" className="rounded-xl px-6 bg-gray-300 hover:bg-gray-400" />
+                      <Button onClick={handleConfirmPinCode}
+                        content="Confirm" className="rounded-xl px-6 bg-blue-500 hover:bg-blue-600" />
+                    </div>
+                  </div>
+                )
+              }
+            </Modal>
 
-          <div className="flex flex-col gap-1 ">
-            <label className="text-sm text-gray-600">Annual Fee ($)</label>
-            <input
-              type="number"
-              min="0"
-              className={inputClass}
-              placeholder="0"
-              value={annualFee}
-              readOnly
-            />
-          </div>
-
-          <div className="flex flex-col gap-1 ">
-            <label className="text-sm text-gray-600">Pin Code</label>
-            <input
-              type="password"
-              className={inputClass}
-              placeholder="Enter 6-digit pin code"
-              {...register("pinCode")}
-              maxLength={6}
-            />
-          </div>
-
-          <Button type="submit" content="Add Card" className="rounded-xl px-8" />
-        </form>
+          </>
+        )}
       </Card>
+
     </div>
   );
 };

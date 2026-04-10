@@ -101,8 +101,6 @@ export const UpdateCardPrivilegeRequestSchema = z
 export type UpdateCardPrivilegeRequest = z.infer<typeof UpdateCardPrivilegeRequestSchema>;
 
 export const GetCardPrivilegesQueryRequestSchema = z.object({
-	page: z.number("Page: must be a number").int("Page: must be an integer").min(0, "Page: must be at least 0"),
-	limit: z.number("Limit: must be a number").int("Limit: must be an integer").min(1, "Limit: must be at least 1"),
 	code: z.string().trim().min(1, "Code: is required"),
 	accountType: z.enum(AccountType, "Account type:invalid account type"),
 	cardType: z.enum(CardType, "Card type:invalid card type"),
