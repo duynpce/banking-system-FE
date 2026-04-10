@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { server } from "../config/server.config";
 import { ROOT_API_URL } from "../../src/shared/constant/constant";
-import CustomerDashboardCard from "../../src/feat/customer/dashboard/card/CustomerDashboardCard";
+import CustomerDashboardCard from "../../src/feat/customer/dashboard/card/hook/CustomerDashboardCard";
 
 type CreateCardRequestBody = {
 	forAccountType: "PERSONAL" | "BUSINESS" | "GOVERNMENT";
