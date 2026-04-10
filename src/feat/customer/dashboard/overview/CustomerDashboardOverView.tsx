@@ -4,6 +4,7 @@ import Mycard from "../../../card/Mycard";
 import Card from "../../../../shared/component/Card";
 import InfoItem from "../../../../shared/component/InfoItem";
 import BarChar from "../../../../shared/component/BarChar";
+import { useGetCardQuery } from "../../../card/useCard";
 
 const transactionData = [
     { description: "Grocery Store", amount: -50.25, date: "2024-06-01" },
@@ -33,10 +34,11 @@ const weeklySpendingData = [
 ];
 
 const CustomerDashboardOverView = () => {
+  const cardData = useGetCardQuery().data;
   return (
     <div className="grid grid-cols-12 gap-10 p-8 ">
       
-      <Mycard className="col-span-6"  innerClassName="h-4/5" />
+      <Mycard card={cardData} title="My cards" className="col-span-6"  innerClassName="h-4/5" />
 
       <Card title="Recent Transactions" className="col-span-6" innerClassName="flex flex-col mb-6 bg-white">
         {transactionData.map((tx, index) => (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Card from "../../../shared/component/Card";
 import BarChar from "../../../shared/component/BarChar";
 import Mycard from "../../card/Mycard";
+import { useGetCardQuery } from "../../card/useCard";
 
 
 
@@ -38,13 +39,14 @@ type Tab = (typeof TABS)[number];
 const TOTAL_PAGES = 4;
 
 const CustomerDashboardTransaction = () => {
+  const cardData = useGetCardQuery().data;
   const [activeTab, setActiveTab] = useState<Tab>("All Transactions");
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="grid grid-cols-12 gap-10 p-8">
 
-      <Mycard className="col-span-6" innerClassName="h-4/5" />
+      <Mycard card={cardData} title="My cards" className="col-span-6" innerClassName="h-4/5" />
 
       <Card title="My Expense" className="col-span-6" innerClassName="bg-white h-4/5">
         <BarChar

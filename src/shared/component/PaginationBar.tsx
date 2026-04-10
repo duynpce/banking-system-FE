@@ -3,11 +3,12 @@ import { useMemo, useState } from "react";
 type PaginationBarProps = {
   totalPage: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
+  currentPageData?: number;
 };
 
-const PaginationBar = ({ totalPage, setPage }: PaginationBarProps) => {
+const PaginationBar = ({ totalPage, setPage, currentPageData }: PaginationBarProps) => {
   const safeTotalPage = useMemo(() => Math.max(1, totalPage), [totalPage]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(currentPageData || 1);
 
   const handleChangePage = (page: number) => {
     const nextPage = Math.min(Math.max(1, page), safeTotalPage);
