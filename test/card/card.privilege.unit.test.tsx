@@ -5,7 +5,8 @@ import {
 	deleteCardPrivilege,
 	deleteCardPrivilegeById,
 	getCardPrivilegeById,
-	getCardPrivileges,
+	getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery,
+	
 	updateCardPrivilege,
 } from "../../src/feat/card/card.privilege.service";
 import type { CreateCardPrivilegeRequest, DeleteCardPrivilegeRequest, GetCardPrivilegesQueryRequest } from "../../src/feat/card/card.privilege.type";
@@ -39,11 +40,11 @@ describe("card.privilege.service unit", () => {
 			effectiveTo: "2030-01-01",
 		};
 
-		mockPost.mockResolvedValue({ data: "create card privilege successfully" });
+		mockPost.mockResolvedValue({ message: "create card privilege successfully" });
 
 		const result = await createCardPrivilege(request);
 
-		expect(result).toBe("create card privilege successfully");
+		expect(result.message).toBe("create card privilege successfully");
 		expect(mockPost).toHaveBeenCalledWith("/v1/card-privileges", request, {
 			toastMessageWhenSuccess: true,
 		});
@@ -76,11 +77,11 @@ describe("card.privilege.service unit", () => {
 			cashbackRate: 2,
 		};
 
-		mockPut.mockResolvedValue({ data: "update card privilege successfully" });
+		mockPut.mockResolvedValue({ message: "update card privilege successfully" });
 
 		const result = await updateCardPrivilege(request);
 
-		expect(result).toBe("update card privilege successfully");
+		expect(result.message).toBe("update card privilege successfully");
 		expect(mockPut).toHaveBeenCalledWith("/v1/card-privileges", request, {
 			toastMessageWhenSuccess: true,
 		});
@@ -88,8 +89,6 @@ describe("card.privilege.service unit", () => {
 
 	test("getCardPrivileges should call list endpoint with params and return data list", async () => {
 		const query:GetCardPrivilegesQueryRequest = {
-			page: 0,
-			limit: 10,
 			code: "GOLD",
 			accountType: "PERSONAL",
 			cardType: "CREDIT",
@@ -112,7 +111,7 @@ describe("card.privilege.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: privileges });
 
-		const result = await getCardPrivileges(query);
+		const result = await getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery(query);
 
 		expect(result).toEqual(privileges);
 		expect(mockGet).toHaveBeenCalledWith("/v1/card-privileges", {

@@ -164,7 +164,7 @@ const CreateCardSection = () => {
 								<input
 									type="password"
 									className={inputClass}
-									placeholder="Enter 6-digit pin code"
+									placeholder="Enter confirmation pin code"
 									value={confirmPinCode}
 									onChange={(event) => setConfirmPinCode(event.target.value)}
 									maxLength={6}

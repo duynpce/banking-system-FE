@@ -26,11 +26,11 @@ describe("card.service unit", () => {
 			pinCode: "123456",
 		};
 
-		mockPost.mockResolvedValue({ data: "create personal card successfully" });
+		mockPost.mockResolvedValue({ message: "create personal card successfully" });
 
 		const result = await createCard(request);
 
-		expect(result).toBe("create personal card successfully");
+		expect(result.message).toBe("create personal card successfully");
 		expect(mockPost).toHaveBeenCalledTimes(1);
 		expect(mockPost).toHaveBeenCalledWith("/v1/personal-cards", request, {
 			toastMessageWhenSuccess: true,

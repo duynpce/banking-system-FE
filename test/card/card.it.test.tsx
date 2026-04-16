@@ -6,17 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { server } from "../config/server.config";
 import { ROOT_API_URL } from "../../src/shared/constant/constant";
-import CustomerDashboardCard from "../../src/feat/customer/dashboard/card/hook/CustomerDashboardCard";
+import type{ CreateCardRequest } from '../../src/feat/card/card.type';
+import CreateCardSection from "../../src/feat/customer/dashboard/card/hook/CreateCardSection";
 
-type CreateCardRequestBody = {
-	forAccountType: "PERSONAL" | "BUSINESS" | "GOVERNMENT";
-	privilegeCode: string;
-	type: "CREDIT" | "DEBIT";
-	pinCode: string;
-	holder?: string;
-};
 
-let latestCreateCardRequest: CreateCardRequestBody | null = null;
+let latestCreateCardRequest: CreateCardRequest | null = null;
 
 server.use(
 	http.get(`${ROOT_API_URL}/v1/accounts`, () => {
@@ -50,8 +44,46 @@ server.use(
 			{ status: 200 }
 		);
 	}),
+
+	http.get(`${ROOT_API_URL}/v1/card-privileges`, ({ request }) => {
+		const url = new URL(request.url);
+		const accountType = url.searchParams.get("accountType");
+		const cardType = url.searchParams.get("cardType");
+
+		if (accountType === "PERSONAL" && cardType === "CREDIT") {
+			return new Response(
+				JSON.stringify({
+					success: true,
+					data: [
+						{
+							id: 1,
+							privilegeCode: "GOLD",
+							expirationYears: 5,
+							spendingLimitDaily: 1000,
+							annualFee: 100,
+							cashbackRate: 0.5,
+							accountType: "PERSONAL",
+							cardType: "CREDIT",
+							effectiveFrom: "2025-01-01",
+							effectiveTo: "2030-01-01",
+						},
+					],
+				}),
+				{ status: 200 }
+			);
+		}
+
+		return new Response(
+			JSON.stringify({
+				success: true,
+				data: [],
+			}),
+			{ status: 200 }
+		);
+	}),
+			
 	http.post(`${ROOT_API_URL}/v1/personal-cards`, async ({ request }) => {
-		latestCreateCardRequest = (await request.json()) as CreateCardRequestBody;
+		latestCreateCardRequest = (await request.json()) as CreateCardRequest;
 
 		if (latestCreateCardRequest.pinCode === "123456") {
 			return new Response(
@@ -70,11 +102,11 @@ server.use(
 
 describe("Card integration", () => {
 
-	const renderPage = () => {
+	const renderPage =  () => {
 		const queryClient = new QueryClient();
 		return render(
 			<QueryClientProvider client={queryClient}>
-				<CustomerDashboardCard />
+				<CreateCardSection />
 			</QueryClientProvider>
 		);
 	};
@@ -85,8 +117,14 @@ describe("Card integration", () => {
 
 		renderPage();
 
+		await screen.findByPlaceholderText("Enter 6-digit pin code");
 		await user.type(screen.getByPlaceholderText("Enter 6-digit pin code"), "123456");
 		await user.click(screen.getByRole("button", { name: "Add Card" }));
+		await screen.findByText("Please re-enter the pin code to confirm card creation.")
+		await user.type(screen.getByPlaceholderText("Enter confirmation pin code"), "123456");
+		await user.click(screen.getByRole("button", { name: "Confirm" }));
+		await screen.findByText("Pin code confirmed. Click confirm to create the card.");
+		await user.click(screen.getByRole("button", { name: "Confirm" }));
 
 		await waitFor(() => {
 			expect(toastSuccessSpy).toHaveBeenCalledWith("card created successfully");
@@ -97,20 +135,25 @@ describe("Card integration", () => {
 		expect(latestCreateCardRequest?.forAccountType).toBe("PERSONAL");
 		expect(latestCreateCardRequest?.type).toBe("CREDIT");
 		expect(latestCreateCardRequest?.pinCode).toBe("123456");
-		expect(latestCreateCardRequest?.privilegeCode).toBe("CLASSIC");
+		expect(latestCreateCardRequest?.privilegeCode).toBe("GOLD");
 	});
 
-	it("should show error toast when backend returns failure", async () => {
+	it("should show error toast when empty pin code is submitted", async () => {
 		const user = userEvent.setup();
 		const toastErrorSpy = vi.spyOn(toast, "error").mockImplementation(() => "mock-toast-id");
 
 		renderPage();
 
-		await user.type(screen.getByPlaceholderText("Enter 6-digit pin code"), "654321");
+	 	await screen.findByPlaceholderText("Enter 6-digit pin code");
 		await user.click(screen.getByRole("button", { name: "Add Card" }));
+		await screen.findByText("Please re-enter the pin code to confirm card creation.")
+		await user.click(screen.getByRole("button", { name: "Confirm" }));
+		await screen.findByText("Pin code confirmed. Click confirm to create the card.");
+		await user.click(screen.getByRole("button", { name: "Confirm" }));
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("invalid pin");
+			expect(toastErrorSpy).toHaveBeenCalledWith("PIN code: must be exactly 6 characters");
 		});
 	});
 });
+
