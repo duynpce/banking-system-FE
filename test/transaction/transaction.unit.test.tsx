@@ -8,7 +8,7 @@ import {
 	getWeeklyTransactions,
 	toLocalDateString,
 } from "../../src/feat/transaction/transaction.service";
-import { TransactionType } from "../../src/feat/transaction/transaction.type";
+import { TransactionType, type CreateTransactionRequest } from '../../src/feat/transaction/transaction.type';
 
 vi.mock("../../src/config/axios/api", () => ({
 	api: {
@@ -25,7 +25,7 @@ const mockGet = api.get as Mock;
 
 describe("transaction.service unit", () => {
 	test("createTransaction should call endpoint correctly", async () => {
-		const request = {
+		const request:CreateTransactionRequest = {
 			receiverAccountNumber: "123456789012",
 			description: "Monthly rent transfer",
 			transferredAmount: 1500,
@@ -43,7 +43,7 @@ describe("transaction.service unit", () => {
 	});
 
 	test("createTransaction should throw when api.post fails", async () => {
-		const request = {
+		const request: CreateTransactionRequest = {
 			receiverAccountNumber: "123456789012",
 			description: "Monthly rent transfer",
 			transferredAmount: 1500,

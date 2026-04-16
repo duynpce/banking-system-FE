@@ -1,7 +1,7 @@
 import { describe, expect, test, vi, type Mock } from "vitest";
 import { api } from "../../src/config/axios/api";
 import { AccountType } from "../../src/feat/account/account.type";
-import { CardType } from "../../src/feat/card/card.type";
+import { CardType, type CardDto, type CreateCardRequest } from "../../src/feat/card/card.type";
 import { createCard, getCard, getCards } from "../../src/feat/card/card.service";
 
 vi.mock("../../src/config/axios/api", () => ({
@@ -19,7 +19,7 @@ const mockGet = api.get as Mock;
 
 describe("card.service unit", () => {
 	test("createCard should call personal-card endpoint and return response data", async () => {
-		const request = {
+		const request: CreateCardRequest 	= {
 			forAccountType: AccountType.PERSONAL,
 			privilegeCode: "GOLD",
 			type: CardType.CREDIT,
@@ -38,7 +38,7 @@ describe("card.service unit", () => {
 	});
 
 	test("createCard should throw when api.post fails", async () => {
-		const request = {
+		const request: CreateCardRequest = {
 			forAccountType: AccountType.PERSONAL,
 			privilegeCode: "GOLD",
 			type: CardType.CREDIT,
@@ -53,7 +53,7 @@ describe("card.service unit", () => {
 	});
 
 	test("getCard should return the first card payload", async () => {
-		const cardDto = {
+		const cardDto:CardDto = {
 			id: "1",
 			number: "123456******7890",
 			type: CardType.CREDIT,
