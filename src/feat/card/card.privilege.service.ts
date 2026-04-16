@@ -21,27 +21,37 @@ export const updateCardPrivilege = async (updateCardPrivilegeRequest: UpdateCard
 	
 };
 
-export const getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery = async (request: GetCardPrivilegesQueryRequest) => {
+export const getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery = async (
+	request: GetCardPrivilegesQueryRequest,
+	signal?: AbortSignal
+) => {
 	const res = await api.get<CardPrivilegeDto>("/v1/card-privileges", {
+		signal,
 		params: request,
 	});
 	return res.data ?? [];
 };
 
-export const getCardPrivilegeById = async (id: number) => {
-	const res = await api.get<CardPrivilegeDto>(`/v1/card-privileges/${id}`);
+export const getCardPrivilegeById = async (id: number, signal?: AbortSignal) => {
+	const res = await api.get<CardPrivilegeDto>(`/v1/card-privileges/${id}`, { signal });
 	return res.data ?? null;
 };
 
-export const getCardPrivilegesWithPagination = async (page: number, limit: number) => {
+export const getCardPrivilegesWithPagination = async (page: number, limit: number, signal?: AbortSignal) => {
 	const res = await api.get<CardPrivilegeDto[]>("/v1/card-privileges", {
+		signal,
 		params: { page, limit },
 	});
 	return res.data ?? [];
 };
 
-export const getCardPrivilegesByCardTypeAndAccountTypeQuery = async (accountType: string, cardType: string) => {
+export const getCardPrivilegesByCardTypeAndAccountTypeQuery = async (
+	accountType: string,
+	cardType: string,
+	signal?: AbortSignal
+) => {
 	const res = await api.get<CardPrivilegeDto[]>("/v1/card-privileges", {
+		signal,
 		params: { accountType, cardType },
 	});
 	return res.data ?? [];

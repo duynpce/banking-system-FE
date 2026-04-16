@@ -15,13 +15,14 @@ export const createCard = async(createCardRequest: CreateCardRequest) => {
   
 }
 
-export const getCard = async() => {
-  const res = await api.get<CardDto>("/v1/cards/first"); 
+export const getCard = async(signal?: AbortSignal) => {
+  const res = await api.get<CardDto>("/v1/cards/first", { signal }); 
   return res.data ?? null ;
 }
 
-export const getCards = async(page: number, limit: number) => {
+export const getCards = async(page: number, limit: number, signal?: AbortSignal) => {
   const res = await api.get<CardDto[]>("/v1/cards", {
+    signal,
     params: { page, limit }
   });
   return res ?? [] ;

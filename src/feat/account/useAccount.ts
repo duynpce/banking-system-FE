@@ -11,7 +11,7 @@ import { queryClient } from "../../config/userQuery.config";
 export const useCreateAccount = () => {
 	return useMutation({
 		mutationKey: ["create-account"],
-		mutationFn: ({ createAccountRequest }: { createAccountRequest: CreateAccountRequest }) => {
+		mutationFn: ({ createAccountRequest}: { createAccountRequest: CreateAccountRequest;}) => {
 			return createAccount(createAccountRequest);
 		},
 		
@@ -33,7 +33,7 @@ export const useUpdateAccount = () => {
 	export const useGetAccountQuery = () => {
 		return useQuery({
 			queryKey: ["my-account"],
-			queryFn: () => getAccount(),
+			queryFn: ({signal} ) => getAccount(signal),
 			staleTime: 10 * 60 * 1000, // 10 minutes
 		});
 	};

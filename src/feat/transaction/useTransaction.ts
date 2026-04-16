@@ -29,17 +29,17 @@ export const useGetTransactionsQueryByPeriod = (
       transactionPeriod,
       toLocalDateString(transactionEndDate),
     ],
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       if (transactionPeriod === "week") {
-        return getWeeklyTransactions(transactionEndDate);
+        return getWeeklyTransactions(transactionEndDate, signal);
       }
 
       if (transactionPeriod === "month") {
-        return getMonthlyTransactions(transactionEndDate);
+        return getMonthlyTransactions(transactionEndDate, signal);
       }
 
       if (transactionPeriod === "year") {
-        return getYearlyTransactions(transactionEndDate);
+        return getYearlyTransactions(transactionEndDate, signal);
       }
 
     },
@@ -50,7 +50,7 @@ export const useGetTransactionsQueryByPeriod = (
 export const useGetTransactionsQueryByDateRange = (startDate: Date, endDate: Date) => {
   return useQuery({
     queryKey: ["transactions", "date-range", toLocalDateString(startDate), toLocalDateString(endDate)],
-    queryFn: () => getTransactionsByDateRange(startDate, endDate),
+    queryFn: ({ signal }) => getTransactionsByDateRange(startDate, endDate, signal),
     enabled: !Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime()),
   });
 }
@@ -58,7 +58,7 @@ export const useGetTransactionsQueryByDateRange = (startDate: Date, endDate: Dat
 export const useGetTransactionsWithPagination = (page: number, limit: number) => {
   return useQuery({
     queryKey: ["transactions", "pagination", page, limit],
-    queryFn: () => getTransactionByPage(page, limit),
+    queryFn: ({ signal }) => getTransactionByPage(page, limit, signal),
     enabled: Number.isFinite(page) && page >= 0 && Number.isFinite(limit) && limit > 0,
   });
 };

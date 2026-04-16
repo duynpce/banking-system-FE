@@ -12,13 +12,13 @@ import type { CreateCardRequest } from './card.type';
   export const useGetCardQuery = () => {
     return useQuery({
       queryKey: ["my-card"],
-      queryFn: () => getCard(),
+      queryFn: ({ signal }) => getCard(signal),
     });
   };
 
   export const useGetCardsQuery = (page: number, limit: number) => {
     return useQuery({
       queryKey: ["cards", page, limit],
-      queryFn: () => getCards(page, limit),
+      queryFn: ({ signal }) => getCards(page, limit, signal),
     });
   }  
