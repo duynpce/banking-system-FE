@@ -1,29 +1,32 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  createTransaction,
   getMonthlyTransactions,
+  getTransactionByPage,
   getTransactionsByDateRange,
   getWeeklyTransactions,
   getYearlyTransactions,
   toLocalDateString,
 } from "./transaction.service";
+import type { CreateTransactionRequest } from "./transaction.type";
 
-type TransactionPeriod = "week" | "month" | "year" | "range";
+type TransactionPeriod = "week" | "month" | "year" ;
 
-export const useTransaction = () => {
-  const [transactionPeriod, setTransactionPeriod] = useState<TransactionPeriod>("week");
-  const [transactionEndDate, setTransactionEndDate] = useState<Date>(new Date());
-  const [transactionStartDate, setTransactionStartDate] = useState<Date>(() => {
-    const start = new Date();
-    start.setDate(start.getDate() - 7);
-    return start;
+export const useCreateTransaction = () => {
+  return useMutation({
+    mutationKey: ["create-transaction"],
+    mutationFn: (request: CreateTransactionRequest) => createTransaction(request),
   });
+};
 
-  const useGetTransactionsQuery = useQuery({
+export const useGetTransactionsQueryByPeriod = (
+  transactionPeriod: TransactionPeriod,
+  transactionEndDate: Date,
+) => {
+  return useQuery({
     queryKey: [
       "transactions",
       transactionPeriod,
-      toLocalDateString(transactionStartDate),
       toLocalDateString(transactionEndDate),
     ],
     queryFn: () => {
@@ -39,17 +42,23 @@ export const useTransaction = () => {
         return getYearlyTransactions(transactionEndDate);
       }
 
-      return getTransactionsByDateRange(transactionStartDate, transactionEndDate);
     },
+    enabled:  !Number.isNaN(transactionEndDate.getTime()),
   });
+};
 
-  return {
-    transactionPeriod,
-    transactionStartDate,
-    transactionEndDate,
-    setTransactionPeriod,
-    setTransactionStartDate,
-    setTransactionEndDate,
-    useGetTransactionsQuery,
-  };
+export const useGetTransactionsQueryByDateRange = (startDate: Date, endDate: Date) => {
+  return useQuery({
+    queryKey: ["transactions", "date-range", toLocalDateString(startDate), toLocalDateString(endDate)],
+    queryFn: () => getTransactionsByDateRange(startDate, endDate),
+    enabled: !Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime()),
+  });
+}
+
+export const useGetTransactionsWithPagination = (page: number, limit: number) => {
+  return useQuery({
+    queryKey: ["transactions", "pagination", page, limit],
+    queryFn: () => getTransactionByPage(page, limit),
+    enabled: Number.isFinite(page) && page >= 0 && Number.isFinite(limit) && limit > 0,
+  });
 };

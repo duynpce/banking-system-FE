@@ -1,15 +1,5 @@
 import { api } from "../../config/axios/api";
-
-export interface Transaction {
-  id: string;
-  fromAccountNumber: string;
-  toAccountNumber: string;
-  type: string;
-  status: string;
-  transferredAmount: number;
-  postedBalance: number;
-  createdAt: string;
-}
+import type { CreateTransactionRequest, TransactionDto } from "./transaction.type";
 
 type DateInput = Date | string;
 
@@ -30,8 +20,15 @@ export const toLocalDateString = (value: DateInput): string => {
   return `${year}-${month}-${day}`;
 };
 
+
+export const createTransaction = async (request: CreateTransactionRequest) => {
+  return await api.post<string>("/v1/transactions", request, {
+    toastMessageWhenSuccess: true,
+  });
+};
+
 export const getTransactionsByDateRange = async (startDate: DateInput, endDate: DateInput) => {
-  const res = await api.get<Transaction[]>(`/v1/transactions`, {
+  const res = await api.get<TransactionDto[]>("/v1/transactions", {
     params: {
       startDate: toLocalDateString(startDate),
       endDate: toLocalDateString(endDate),
@@ -60,3 +57,10 @@ export const getYearlyTransactions = async (endDate: DateInput) => {
   start.setFullYear(start.getFullYear() - 1);
   return getTransactionsByDateRange(start, end);
 };
+
+export const getTransactionByPage = async (page: number, limit: number) => {
+  const res = await api.get<TransactionDto[]>("/v1/transactions", {
+    params: { page, limit },
+  });
+  return res.data;
+}
