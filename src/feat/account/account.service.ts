@@ -1,5 +1,5 @@
 import { api } from "../../config/axios/api"
-import type {AccountDto, BusinessAccountDto, GovernmentAccountDto, PersonalAccountDto , CreateAccountRequest, UpdateAccountRequest} from "./account.type";
+import type {AccountDto, CreateAccountRequest, UpdateAccountRequest} from "./account.type";
 import { AccountType } from './account.type';
 
 const apiMap = {
@@ -21,23 +21,9 @@ export const updateAccount = async (updateAccountRequest: UpdateAccountRequest) 
   return await api.put(`/v1/${correspondingApi}`, updateAccountRequest, { toastMessageWhenSuccess: true });
 };
 
-export const getAccount = async () => {
-  const res = await api.get<AccountDto>("/v1/accounts")
+export const getAccount = async (signal?: AbortSignal) => {
+  const res = await api.get<AccountDto>("/v1/accounts", { signal });
   return res.data ?? null ;
 }
 
-export const convertDataToDto = (accountDto: AccountDto) => {
-  if(accountDto.type === AccountType.BUSINESS){
-    return accountDto as BusinessAccountDto
-  } 
-  else if(accountDto.type === AccountType.PERSONAL){
-    return accountDto as PersonalAccountDto
-  }
-    else if(accountDto.type === AccountType.GOVERNMENT){
-      return accountDto as GovernmentAccountDto
-    }
-    else{
-      throw new Error("Unknown account type");
-    }
-}
 

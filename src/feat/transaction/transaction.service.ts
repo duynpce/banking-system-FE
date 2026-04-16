@@ -27,8 +27,9 @@ export const createTransaction = async (request: CreateTransactionRequest) => {
   });
 };
 
-export const getTransactionsByDateRange = async (startDate: DateInput, endDate: DateInput) => {
+export const getTransactionsByDateRange = async (startDate: DateInput, endDate: DateInput, signal?: AbortSignal) => {
   const res = await api.get<TransactionDto[]>("/v1/transactions", {
+    signal,
     params: {
       startDate: toLocalDateString(startDate),
       endDate: toLocalDateString(endDate),
@@ -37,29 +38,30 @@ export const getTransactionsByDateRange = async (startDate: DateInput, endDate: 
   return res.data;
 };
 
-export const getWeeklyTransactions = async (endDate: DateInput) => {
+export const getWeeklyTransactions = async (endDate: DateInput, signal?: AbortSignal) => {
   const end = toDate(endDate);
   const start = new Date(end.getTime());
   start.setDate(start.getDate() - 7);
-  return getTransactionsByDateRange(start, end);
+  return getTransactionsByDateRange(start, end, signal);
 };
 
-export const getMonthlyTransactions = async (endDate: DateInput) => {
+export const getMonthlyTransactions = async (endDate: DateInput, signal?: AbortSignal) => {
   const end = toDate(endDate);
   const start = new Date(end.getTime());
   start.setMonth(start.getMonth() - 1);
-  return getTransactionsByDateRange(start, end);
+  return getTransactionsByDateRange(start, end, signal);
 };
 
-export const getYearlyTransactions = async (endDate: DateInput) => {
+export const getYearlyTransactions = async (endDate: DateInput, signal?: AbortSignal) => {
   const end = toDate(endDate);
   const start = new Date(end.getTime());
   start.setFullYear(start.getFullYear() - 1);
-  return getTransactionsByDateRange(start, end);
+  return getTransactionsByDateRange(start, end, signal);
 };
 
-export const getTransactionByPage = async (page: number, limit: number) => {
+export const getTransactionByPage = async (page: number, limit: number, signal?: AbortSignal) => {
   const res = await api.get<TransactionDto[]>("/v1/transactions", {
+    signal,
     params: { page, limit },
   });
   return res.data;
