@@ -11,8 +11,8 @@ export const apiMap = {
 export const createCard = async(createCardRequest: CreateCardRequest) => {
 
   const correspondingApi = apiMap[createCardRequest.forAccountType];
-  const res = await api.post(`/v1/${correspondingApi}`, createCardRequest, { toastMessageWhenSuccess: true });
-  return res.data ?? null ;
+  return await api.post(`/v1/${correspondingApi}`, createCardRequest, { toastMessageWhenSuccess: true });
+  
 }
 
 export const getCard = async() => {

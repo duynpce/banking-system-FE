@@ -8,17 +8,17 @@ import type {
 } from "./card.privilege.type";
 
 export const createCardPrivilege = async (createCardPrivilegeRequest: CreateCardPrivilegeRequest) => {
-	const res = await api.post<string>("/v1/card-privileges", createCardPrivilegeRequest, {
+	return await api.post<string>("/v1/card-privileges", createCardPrivilegeRequest, {
 		toastMessageWhenSuccess: true,
 	});
-	return res.data ?? null;
+	
 };
 
 export const updateCardPrivilege = async (updateCardPrivilegeRequest: UpdateCardPrivilegeRequest) => {
-	const res = await api.put<string>("/v1/card-privileges", updateCardPrivilegeRequest, {
+	return await api.put<string>("/v1/card-privileges", updateCardPrivilegeRequest, {
 		toastMessageWhenSuccess: true,
 	});
-	return res.data ?? null;
+	
 };
 
 export const getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery = async (request: GetCardPrivilegesQueryRequest) => {
