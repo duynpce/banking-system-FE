@@ -104,6 +104,7 @@ describe("account.service unit", () => {
 	});
 
 	test("getAccount should return account payload", async () => {
+		const signal = new AbortController().signal;
 		const account:AccountDto = {
 			id: 1,
 			email: "john@example.com",
@@ -115,10 +116,10 @@ describe("account.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: account });
 
-		const result = await getAccount();
+		const result = await getAccount(signal);
 
 		expect(result).toEqual(account);
-		expect(mockGet).toHaveBeenCalledWith("/v1/accounts");
+		expect(mockGet).toHaveBeenCalledWith("/v1/accounts", { signal });
 	});
 
 	test("getAccount should throw when api.get fails", async () => {

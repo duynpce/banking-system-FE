@@ -57,6 +57,7 @@ describe("transaction.service unit", () => {
 	});
 
 	test("getTransactionsByDateRange should call endpoint with formatted date params", async () => {
+		const signal = new AbortController().signal;
 		const payload = [
 			{
 				id: 1,
@@ -75,10 +76,11 @@ describe("transaction.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: payload });
 
-		const result = await getTransactionsByDateRange(startDate, endDate);
+		const result = await getTransactionsByDateRange(startDate, endDate, signal);
 
 		expect(result).toEqual(payload);
 		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
+			signal,
 			params: {
 				startDate: toLocalDateString(startDate),
 				endDate: toLocalDateString(endDate),
@@ -94,13 +96,15 @@ describe("transaction.service unit", () => {
 	});
 
 	test("getWeeklyTransactions should call endpoint with 7-day range", async () => {
+		const signal = new AbortController().signal;
 		const endDate = new Date("2026-04-16T00:00:00.000Z");
 
 		mockGet.mockResolvedValue({ data: [] });
 
-		await getWeeklyTransactions(endDate);
+		await getWeeklyTransactions(endDate, signal);
 
 		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
+			signal,
 			params: {
 				startDate: toLocalDateString("2026-04-09"),
 				endDate: toLocalDateString(endDate),
@@ -109,12 +113,14 @@ describe("transaction.service unit", () => {
 	});
 
 	test("getTransactionByPage should call endpoint correctly", async () => {
+		const signal = new AbortController().signal;
 		mockGet.mockResolvedValue({ data: [] });
 
-		const result = await getTransactionByPage(1, 10);
+		const result = await getTransactionByPage(1, 10, signal);
 
 		expect(result).toEqual([]);
 		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
+			signal,
 			params: { page: 1, limit: 10 },
 		});
 	});

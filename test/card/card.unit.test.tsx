@@ -53,6 +53,7 @@ describe("card.service unit", () => {
 	});
 
 	test("getCard should return the first card payload", async () => {
+		const signal = new AbortController().signal;
 		const cardDto:CardDto = {
 			id: "1",
 			number: "123456******7890",
@@ -65,14 +66,15 @@ describe("card.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: cardDto });
 
-		const result = await getCard();
+		const result = await getCard(signal);
 
 		expect(result).toEqual(cardDto);
 		expect(mockGet).toHaveBeenCalledTimes(1);
-		expect(mockGet).toHaveBeenCalledWith("/v1/cards/first");
+		expect(mockGet).toHaveBeenCalledWith("/v1/cards/first", { signal });
 	});
 
 	test("getCards should return paginated response object", async () => {
+		const signal = new AbortController().signal;
 		const response = {
 			success: true,
 			data: [
@@ -96,11 +98,12 @@ describe("card.service unit", () => {
 
 		mockGet.mockResolvedValue(response);
 
-		const result = await getCards(0, 4);
+		const result = await getCards(0, 4, signal);
 
 		expect(result).toEqual(response);
 		expect(mockGet).toHaveBeenCalledTimes(1);
 		expect(mockGet).toHaveBeenCalledWith("/v1/cards", {
+			signal,
 			params: { page: 0, limit: 4 },
 		});
 	});
