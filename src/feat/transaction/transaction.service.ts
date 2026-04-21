@@ -1,15 +1,6 @@
 import { api } from "../../config/axios/api";
+import type { CreateTransactionRequest, TransactionDto, TransactionFilter } from "./transaction.type";
 
-export interface Transaction {
-  id: string;
-  fromAccountNumber: string;
-  toAccountNumber: string;
-  type: string;
-  status: string;
-  transferredAmount: number;
-  postedBalance: number;
-  createdAt: string;
-}
 
 type DateInput = Date | string;
 
@@ -30,33 +21,42 @@ export const toLocalDateString = (value: DateInput): string => {
   return `${year}-${month}-${day}`;
 };
 
-export const getTransactionsByDateRange = async (startDate: DateInput, endDate: DateInput) => {
-  const res = await api.get<Transaction[]>(`/v1/transactions`, {
+
+export const createTransaction = async (request: CreateTransactionRequest) => {
+  return await api.post<string>("/v1/transactions", request, {
+    toastMessageWhenSuccess: true,
+  });
+};
+
+export const getTransactionsByFilter = async (transactionFilter: TransactionFilter, signal?: AbortSignal) => {
+  return await api.get<TransactionDto[]>("/v1/transactions", {
+    signal,
     params: {
-      startDate: toLocalDateString(startDate),
-      endDate: toLocalDateString(endDate),
+      "paginationDto.page": transactionFilter.paginationDto.page,
+      "paginationDto.limit": transactionFilter.paginationDto.limit,
+      "transactionGroup": transactionFilter.transactionGroup,
+      "type": transactionFilter.type,
+      "status": transactionFilter.status,
+      "startDate": transactionFilter.startDate,
+      "endDate": transactionFilter.endDate,
     },
   });
-  return res.data;
 };
 
-export const getWeeklyTransactions = async (endDate: DateInput) => {
+export const getRelativeStartDate = (endDate: DateInput, period: "week" | "month" | "year") => {
   const end = toDate(endDate);
   const start = new Date(end.getTime());
-  start.setDate(start.getDate() - 7);
-  return getTransactionsByDateRange(start, end);
-};
 
-export const getMonthlyTransactions = async (endDate: DateInput) => {
-  const end = toDate(endDate);
-  const start = new Date(end.getTime());
-  start.setMonth(start.getMonth() - 1);
-  return getTransactionsByDateRange(start, end);
-};
+  if (period === "week") {
+    start.setDate(start.getDate() - 7);
+    return start;
+  }
 
-export const getYearlyTransactions = async (endDate: DateInput) => {
-  const end = toDate(endDate);
-  const start = new Date(end.getTime());
+  if (period === "month") {
+    start.setMonth(start.getMonth() - 1);
+    return start;
+  }
+
   start.setFullYear(start.getFullYear() - 1);
-  return getTransactionsByDateRange(start, end);
+  return start;
 };

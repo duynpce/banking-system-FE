@@ -88,6 +88,7 @@ describe("card.privilege.service unit", () => {
 	});
 
 	test("getCardPrivileges should call list endpoint with params and return data list", async () => {
+		const signal = new AbortController().signal;
 		const query:GetCardPrivilegesQueryRequest = {
 			code: "GOLD",
 			accountType: "PERSONAL",
@@ -111,15 +112,17 @@ describe("card.privilege.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: privileges });
 
-		const result = await getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery(query);
+		const result = await getCardPrivilegesByCodeAndAccountTypeAndCardTypeQuery(query, signal);
 
 		expect(result).toEqual(privileges);
 		expect(mockGet).toHaveBeenCalledWith("/v1/card-privileges", {
+			signal,
 			params: query,
 		});
 	});
 
 	test("getCardPrivilegeById should call detail endpoint and return payload", async () => {
+		const signal = new AbortController().signal;
 		const dto = {
 			id: 1,
 			privilegeCode: "PLATINUM",
@@ -135,10 +138,10 @@ describe("card.privilege.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: dto });
 
-		const result = await getCardPrivilegeById(1);
+		const result = await getCardPrivilegeById(1, signal);
 
 		expect(result).toEqual(dto);
-		expect(mockGet).toHaveBeenCalledWith("/v1/card-privileges/1");
+		expect(mockGet).toHaveBeenCalledWith("/v1/card-privileges/1", { signal });
 	});
 
 	test("deleteCardPrivilege and deleteCardPrivilegeById should call delete endpoints", async () => {

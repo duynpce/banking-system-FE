@@ -30,6 +30,7 @@ export const useViewCardSection = () => {
 	};
 
 	return {
+		cardPage,
 		setCardPage,
 		cards,
 		cardsMetaData,

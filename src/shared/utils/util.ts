@@ -28,7 +28,7 @@ export const handleChangeValueForUniqueDetails = <T extends Record<string, Uniqu
 export const handleChangeExistsForUniqueDetails = <T extends Record<string, UniqueDetailObj>>(
   setUniqueDetails: React.Dispatch<React.SetStateAction<T>>,
   name: string,
-  exists: boolean,
+  exists: boolean | undefined,
 ) => {
   setUniqueDetails(prev => ({
     ...prev,

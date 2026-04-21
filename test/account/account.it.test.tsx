@@ -15,16 +15,8 @@ import {
 } from "../../src/feat/account/account.type";
 import { useFormCustom } from "../../src/shared/hook/useFormCustom";
 
-type UpdateBusinessAccountRequestBody = {
-	type: "BUSINESS" | "PERSONAL" | "GOVERNMENT";
-	email: string;
-	phoneNumber: string;
-	address: string;
-	organizationName: string;
-	taxIdNumber: string;
-};
 
-let latestUpdateAccountRequest: UpdateBusinessAccountRequestBody | null = null;
+let latestUpdateAccountRequest: UpdateAccountRequest | null = null;
 
 	server.use(
 		http.get(`${ROOT_API_URL}/v1/accounts`, () => {
@@ -44,7 +36,7 @@ let latestUpdateAccountRequest: UpdateBusinessAccountRequestBody | null = null;
 			);
 		}),
 		http.put(`${ROOT_API_URL}/v1/business-accounts`, async ({ request }) => {
-			latestUpdateAccountRequest = (await request.json()) as UpdateBusinessAccountRequestBody;
+			latestUpdateAccountRequest = (await request.json()) as UpdateAccountRequest;
 
 			if (latestUpdateAccountRequest.email.includes("success")) {
 				return new Response(

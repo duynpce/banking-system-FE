@@ -1,21 +1,7 @@
 import 'axios';
+import type { ResponseDto } from '../../shared/dto/response.dto';
 
 declare module 'axios' {
-
-  interface MetaDto{
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    pageSize: number; 
-}
-
-export interface ResponseDto<T>{
-  success: boolean
-  message?: string
-  data: T
-  metaData?: MetaDto
-}
-
   // override the AxiosInstance type to return our custom ResponseDto
   // T is the expected data type 
   // promise Promise<ResponseDto<T>> --> promise the response  is responseDto with data of type T

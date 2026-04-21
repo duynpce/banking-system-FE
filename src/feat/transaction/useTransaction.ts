@@ -1,55 +1,92 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  getMonthlyTransactions,
-  getTransactionsByDateRange,
-  getWeeklyTransactions,
-  getYearlyTransactions,
+  createTransaction,
+  getRelativeStartDate,
+  getTransactionsByFilter,
   toLocalDateString,
 } from "./transaction.service";
+import { TransactionGroup, TransactionStatus, TransactionType, type CreateTransactionRequest } from './transaction.type';
 
-type TransactionPeriod = "week" | "month" | "year" | "range";
 
-export const useTransaction = () => {
-  const [transactionPeriod, setTransactionPeriod] = useState<TransactionPeriod>("week");
-  const [transactionEndDate, setTransactionEndDate] = useState<Date>(new Date());
-  const [transactionStartDate, setTransactionStartDate] = useState<Date>(() => {
-    const start = new Date();
-    start.setDate(start.getDate() - 7);
-    return start;
+type TransactionPeriod = "week" | "month" | "year" ;
+
+export const useCreateTransaction = () => {
+  return useMutation({
+    mutationKey: ["create-transaction"],
+    mutationFn: (request: CreateTransactionRequest) => createTransaction(request),
   });
+};
 
-  const useGetTransactionsQuery = useQuery({
+export const useGetTransactionsQueryByPeriod = (
+  transactionPeriod: TransactionPeriod,
+  transactionEndDate: Date,
+) => {
+  const endDateString = toLocalDateString(transactionEndDate);
+
+  return useQuery({
     queryKey: [
       "transactions",
       transactionPeriod,
-      toLocalDateString(transactionStartDate),
-      toLocalDateString(transactionEndDate),
+      endDateString,
     ],
-    queryFn: () => {
-      if (transactionPeriod === "week") {
-        return getWeeklyTransactions(transactionEndDate);
-      }
-
-      if (transactionPeriod === "month") {
-        return getMonthlyTransactions(transactionEndDate);
-      }
-
-      if (transactionPeriod === "year") {
-        return getYearlyTransactions(transactionEndDate);
-      }
-
-      return getTransactionsByDateRange(transactionStartDate, transactionEndDate);
+    queryFn: async ({ signal }) => {
+      const startDate = getRelativeStartDate(transactionEndDate, transactionPeriod);
+      const res = await getTransactionsByFilter(
+        {
+          paginationDto: { page: 0, limit: 1000},
+          transactionGroup: TransactionGroup.ALL,
+          startDate: toLocalDateString(startDate),
+          endDate: endDateString,
+        },
+        signal,
+      );
+      return res.data;
     },
+    enabled:  !Number.isNaN(transactionEndDate.getTime()),
   });
+};
 
-  return {
-    transactionPeriod,
-    transactionStartDate,
-    transactionEndDate,
-    setTransactionPeriod,
-    setTransactionStartDate,
-    setTransactionEndDate,
-    useGetTransactionsQuery,
-  };
+export const useGetTransactionsQueryByDateRange = (startDate: Date, endDate: Date) => {
+  return useQuery({
+    queryKey: ["transactions", "date-range", toLocalDateString(startDate), toLocalDateString(endDate)],
+    queryFn: async ({ signal }) => {
+      const res = await getTransactionsByFilter(
+        {
+          paginationDto: { page: 0, limit: 1000 },
+          transactionGroup: TransactionGroup.ALL,
+          startDate: toLocalDateString(startDate),
+          endDate: toLocalDateString(endDate),
+        },
+        signal,
+      );
+      return res.data;
+    },
+    enabled: !Number.isNaN(startDate.getTime()) && !Number.isNaN(endDate.getTime()),
+  });
+}
+
+export const useGetTransactionsWithPagination = (page: number, limit: number,transactionGroup?:
+   TransactionGroup, type?: TransactionType, status?: TransactionStatus, startDate? :Date, endDate?: Date
+
+) => {
+  const startDateString = startDate ? toLocalDateString(startDate) : undefined;
+  const endDateString = endDate ? toLocalDateString(endDate) : undefined;
+  const effectiveTransactionGroup = transactionGroup ?? TransactionGroup.ALL;
+
+  return useQuery({
+    queryKey: ["transactions", "pagination", page, limit, effectiveTransactionGroup, type, status, startDateString, endDateString],
+    queryFn: ({ signal }) =>
+      getTransactionsByFilter(
+        {
+          paginationDto: { page, limit },
+          transactionGroup: effectiveTransactionGroup,
+          type,
+          status,
+          startDate: startDateString,
+          endDate: endDateString,
+        },
+        signal,
+      ),
+    enabled: Number.isFinite(page) && page >= 0 && Number.isFinite(limit) && limit > 0,
+  });
 };

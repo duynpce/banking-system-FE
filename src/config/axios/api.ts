@@ -3,6 +3,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { ROOT_API_URL } from "../../shared/constant/constant";
 import { toast } from "react-toastify";
 import type { getTokenDto } from "../../feat/auth/callback/callback.service";
+import qs from 'qs';
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
@@ -25,6 +26,9 @@ export const setAccessToken = (token: string | null) => {
 };
 
 export const api = axios.create({
+  paramsSerializer: (params) => {
+    return qs.stringify(params, { arrayFormat: 'repeat', allowDots: true });
+  },
   baseURL: `${ROOT_API_URL}`,
   withCredentials: true,
 });

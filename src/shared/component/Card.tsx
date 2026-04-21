@@ -4,7 +4,7 @@ import LoadingSpinner from "./LoadingSpinner";
 type CardProps = {
   isLoading?: boolean;
   isFetching?: boolean;
-  title: string;
+  title?: string;
   children?: React.ReactNode;
   innerClassName?: string;
  } & React.HTMLAttributes<HTMLDivElement>;

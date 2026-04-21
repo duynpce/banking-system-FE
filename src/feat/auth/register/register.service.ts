@@ -19,12 +19,16 @@ export const uniqueDetailsMap = {
 export const checkUniqueField = async (
   fieldName: string,
   value: string
-): Promise<boolean> => {
+) => {
   if (!(fieldName in uniqueDetailsMap)) {
     throw new Error(`Field ${fieldName} is not a unique field`);
   }
 
-  const correspondingApi: string = uniqueDetailsMap[fieldName as keyof typeof uniqueDetailsMap];
+  if(!value) {
+    return;
+  }
+
+  const correspondingApi = uniqueDetailsMap[fieldName as keyof typeof uniqueDetailsMap];
   const exists = (
     await api.get<boolean>(`/v1/${correspondingApi}/exists/${_.kebabCase(fieldName)}/${value}`)
   ).data;

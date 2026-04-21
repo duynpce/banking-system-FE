@@ -68,7 +68,7 @@ describe('Register component', () => {
     await user.type(screen.getByPlaceholderText("Enter username"), "valid_username");
     await user.type(screen.getByPlaceholderText("Enter password"), "valid_password1A@");
     await user.type(screen.getByPlaceholderText("Enter email"), "valid_username@example.com");
-    await user.type(screen.getByPlaceholderText("Enter phone number"), "1234567890");
+    await user.type(screen.getByPlaceholderText("Enter phone number (9 - 11 digits)"), "1234567890");
     await user.type(screen.getByPlaceholderText("Enter address"), "valid_address");
     await user.type(screen.getByPlaceholderText("Enter full name"), "Valid_full_name");
     await user.type(screen.getByPlaceholderText("Enter ID card number (9-12 digits)"), "1234567890");

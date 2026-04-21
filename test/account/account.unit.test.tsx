@@ -1,6 +1,6 @@
 import { describe, expect, test, vi, type Mock } from "vitest";
 import { api } from "../../src/config/axios/api";
-import { AccountType } from "../../src/feat/account/account.type";
+import { AccountType, type AccountDto, type CreateAccountRequest, type UpdateAccountRequest } from "../../src/feat/account/account.type";
 import {
 	createAccount,
 	getAccount,
@@ -24,7 +24,7 @@ const mockPut = api.put as Mock;
 
 describe("account.service unit", () => {
 	test("createAccount should call personal-account endpoint correctly", async () => {
-		const request = {
+		const request:CreateAccountRequest = {
 			type: AccountType.PERSONAL,
 			username: "john_doe",
 			password: "Pass@123",
@@ -34,12 +34,12 @@ describe("account.service unit", () => {
 			fullName: "John Doe",
 			idCardNumber: "123456789",
 			dateOfBirth: "2000-01-01",
-			gender: "MALE",
-		};
+					gender: "MALE",
+				};
 
 		mockPost.mockResolvedValue({ data: "create personal account successfully" });
 
-		const result = await createAccount(request as never);
+		const result = await createAccount(request);
 
 		expect(result).toEqual({ data: "create personal account successfully" });
 		expect(mockPost).toHaveBeenCalledWith("/v1/personal-accounts", request, {
@@ -48,7 +48,7 @@ describe("account.service unit", () => {
 	});
 
 	test("createAccount should throw when api.post fails", async () => {
-		const request = {
+		const request: CreateAccountRequest = {
 			type: AccountType.PERSONAL,
 			username: "john_doe",
 			password: "Pass@123",
@@ -68,7 +68,7 @@ describe("account.service unit", () => {
 	});
 
 	test("updateAccount should call business-account endpoint correctly", async () => {
-		const request = {
+		const request: UpdateAccountRequest = {
 			type: AccountType.BUSINESS,
 			email: "biz@example.com",
 			phoneNumber: "0123456789",
@@ -88,7 +88,7 @@ describe("account.service unit", () => {
 	});
 
 	test("updateAccount should throw when api.put fails", async () => {
-		const request = {
+		const request: UpdateAccountRequest = {
 			type: AccountType.BUSINESS,
 			email: "biz@example.com",
 			phoneNumber: "0123456789",
@@ -104,10 +104,12 @@ describe("account.service unit", () => {
 	});
 
 	test("getAccount should return account payload", async () => {
-		const account = {
+		const signal = new AbortController().signal;
+		const account:AccountDto = {
 			id: 1,
 			email: "john@example.com",
 			phoneNumber: "0123456789",
+			number: "123456789012",
 			address: "HCM city",
 			type: AccountType.PERSONAL,
 			status: "ACTIVE",
@@ -115,10 +117,10 @@ describe("account.service unit", () => {
 
 		mockGet.mockResolvedValue({ data: account });
 
-		const result = await getAccount();
+		const result = await getAccount(signal);
 
 		expect(result).toEqual(account);
-		expect(mockGet).toHaveBeenCalledWith("/v1/accounts");
+		expect(mockGet).toHaveBeenCalledWith("/v1/accounts", { signal });
 	});
 
 	test("getAccount should throw when api.get fails", async () => {
