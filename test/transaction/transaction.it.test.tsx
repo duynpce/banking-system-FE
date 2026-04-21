@@ -24,8 +24,9 @@ const todayLocalDate = toLocalDateString(new Date());
 server.use(
 	http.post(`${ROOT_API_URL}/v1/transactions`, async ({ request }) => {
 		const requestBody = (await request.json()) as CreateTransactionRequest;
+		const receiverAccountNumber = "receiverAccountNumber" in requestBody ? requestBody.receiverAccountNumber : undefined;
 
-		if (requestBody.receiverAccountNumber === validAccountNumber) {
+		if (receiverAccountNumber === validAccountNumber) {
 			return new Response(
 				JSON.stringify({
 					success: true,
@@ -42,8 +43,20 @@ server.use(
 	}),
 	http.get(`${ROOT_API_URL}/v1/transactions`, ({ request }) => {
 		const url = new URL(request.url);
-		const endDate = url.searchParams.get("endDate");
-		const page = url.searchParams.get("page");
+		const transactionGroup = url.searchParams.get("transactionFilter.transactionGroup");
+		const endDate = url.searchParams.get("transactionFilter.endDate");
+		const page = url.searchParams.get("transactionFilter.paginationDto.page");
+		const limit = url.searchParams.get("transactionFilter.paginationDto.limit");
+
+		if (transactionGroup === null || page === null || limit === null) {
+			return new Response(
+				JSON.stringify({
+					success: false,
+					message: "invalid filter",
+				}),
+				{ status: 400 }
+			);
+		}
 
 		if (endDate !== null) {
 			if (endDate === todayLocalDate) {
@@ -51,6 +64,12 @@ server.use(
 					JSON.stringify({
 						success: true,
 						data: defaultTransactionList,
+						metaData: {
+							totalItems: 1,
+							totalPages: 1,
+							currentPage: 0,
+							pageSize: 100,
+						},
 					}),
 					{ status: 200 }
 				);
@@ -60,6 +79,12 @@ server.use(
 				JSON.stringify({
 					success: true,
 					data: [],
+					metaData: {
+						totalItems: 0,
+						totalPages: 0,
+						currentPage: 0,
+						pageSize: 100,
+					},
 				}),
 				{ status: 200 }
 			);
@@ -71,6 +96,12 @@ server.use(
 					JSON.stringify({
 						success: true,
 						data: defaultTransactionList,
+						metaData: {
+							totalItems: 1,
+							totalPages: 1,
+							currentPage: 0,
+							pageSize: 10,
+						},
 					}),
 					{ status: 200 }
 				);
@@ -80,6 +111,12 @@ server.use(
 				JSON.stringify({
 					success: true,
 					data: [],
+					metaData: {
+						totalItems: 0,
+						totalPages: 0,
+						currentPage: Number(page),
+						pageSize: Number(limit),
+					},
 				}),
 				{ status: 200 }
 			);
@@ -89,6 +126,12 @@ server.use(
 			JSON.stringify({
 				success: true,
 				data: [],
+				metaData: {
+					totalItems: 0,
+					totalPages: 0,
+					currentPage: Number(page),
+					pageSize: Number(limit),
+				},
 			}),
 			{ status: 200 }
 		);
@@ -148,7 +191,7 @@ const TransactionsByPageView = ({ page, limit }: { page: number; limit: number }
 		return <span>Error</span>;
 	}
 
-	return <span>transaction-page-count:{data?.length ?? 0}</span>;
+	return <span>transaction-page-count:{data?.data?.length ?? 0}</span>;
 };
 
 const CreateTransactionForm = ({ accountNumber }: { accountNumber: string }) => {

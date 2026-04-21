@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { server } from "../config/server.config";
 import { ROOT_API_URL } from "../../src/shared/constant/constant";
 import type{ CreateCardRequest } from '../../src/feat/card/card.type';
-import CreateCardSection from "../../src/feat/customer/dashboard/card/hook/CreateCardSection";
+import CreateCardSection from "../../src/feat/customer/dashboard/card/component/CreateCardSection";
 
 
 let latestCreateCardRequest: CreateCardRequest | null = null;

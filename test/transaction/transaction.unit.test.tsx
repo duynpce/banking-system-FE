@@ -3,12 +3,11 @@ import { describe, expect, test, vi, type Mock } from "vitest";
 import { api } from "../../src/config/axios/api";
 import {
 	createTransaction,
-	getTransactionByPage,
-	getTransactionsByDateRange,
-	getWeeklyTransactions,
+	getRelativeStartDate,
+	getTransactionsByFilter,
 	toLocalDateString,
 } from "../../src/feat/transaction/transaction.service";
-import { TransactionType, type CreateTransactionRequest } from '../../src/feat/transaction/transaction.type';
+import { TransactionGroup, TransactionType, type CreateTransactionRequest } from '../../src/feat/transaction/transaction.type';
 
 vi.mock("../../src/config/axios/api", () => ({
 	api: {
@@ -56,8 +55,17 @@ describe("transaction.service unit", () => {
 		await expect(createTransaction(request)).rejects.toThrow("network error");
 	});
 
-	test("getTransactionsByDateRange should call endpoint with formatted date params", async () => {
+	test("getTransactionsByFilter should call endpoint with transactionFilter params", async () => {
 		const signal = new AbortController().signal;
+		const filter = {
+			paginationDto: {
+				page: 0,
+				limit: 10,
+			},
+			transactionGroup: TransactionGroup.ALL,
+			startDate: "2026-04-01",
+			endDate: "2026-04-16",
+		};
 		const payload = [
 			{
 				id: 1,
@@ -71,57 +79,57 @@ describe("transaction.service unit", () => {
 				postedBalance: 1000,
 			},
 		];
-		const startDate = new Date("2026-04-01T00:00:00.000Z");
-		const endDate = new Date("2026-04-16T00:00:00.000Z");
 
-		mockGet.mockResolvedValue({ data: payload });
+		mockGet.mockResolvedValue({
+			data: payload,
+			metaData: {
+				totalItems: 1,
+				totalPages: 1,
+				currentPage: 0,
+				pageSize: 10,
+			},
+			success: true,
+		});
 
-		const result = await getTransactionsByDateRange(startDate, endDate, signal);
+		const result = await getTransactionsByFilter(filter, signal);
 
-		expect(result).toEqual(payload);
+		expect(result.data).toEqual(payload);
 		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
 			signal,
 			params: {
-				startDate: toLocalDateString(startDate),
-				endDate: toLocalDateString(endDate),
+				transactionFilter: {
+					paginationDto: {
+						page: 0,
+						limit: 10,
+					},
+					transactionGroup: TransactionGroup.ALL,
+					startDate: "2026-04-01",
+					endDate: "2026-04-16",
+				},
 			},
 		});
 	});
 
-	test("getTransactionsByDateRange should throw when api.get fails", async () => {
+	test("getTransactionsByFilter should throw when api.get fails", async () => {
 		const error = new AxiosError("unauthorized");
 		mockGet.mockRejectedValue(error);
 
-		await expect(getTransactionsByDateRange("2026-04-01", "2026-04-16")).rejects.toThrow("unauthorized");
+		await expect(
+			getTransactionsByFilter({
+				paginationDto: { page: 0, limit: 10 },
+				transactionGroup: TransactionGroup.ALL,
+			}),
+		).rejects.toThrow("unauthorized");
 	});
 
-	test("getWeeklyTransactions should call endpoint with 7-day range", async () => {
-		const signal = new AbortController().signal;
+	test("getRelativeStartDate should return a 7-day range start date for week period", async () => {
 		const endDate = new Date("2026-04-16T00:00:00.000Z");
+		const startDate = getRelativeStartDate(endDate, "week");
 
-		mockGet.mockResolvedValue({ data: [] });
-
-		await getWeeklyTransactions(endDate, signal);
-
-		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
-			signal,
-			params: {
-				startDate: toLocalDateString("2026-04-09"),
-				endDate: toLocalDateString(endDate),
-			},
-		});
+		expect(toLocalDateString(startDate)).toBe("2026-04-09");
 	});
 
-	test("getTransactionByPage should call endpoint correctly", async () => {
-		const signal = new AbortController().signal;
-		mockGet.mockResolvedValue({ data: [] });
-
-		const result = await getTransactionByPage(1, 10, signal);
-
-		expect(result).toEqual([]);
-		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
-			signal,
-			params: { page: 1, limit: 10 },
-		});
+	test("toLocalDateString should format DateInput to YYYY-MM-DD", async () => {
+		expect(toLocalDateString("2026-04-16T00:00:00.000Z")).toBe("2026-04-16");
 	});
 });
