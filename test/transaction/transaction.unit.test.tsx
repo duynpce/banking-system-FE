@@ -97,15 +97,13 @@ describe("transaction.service unit", () => {
 		expect(mockGet).toHaveBeenCalledWith("/v1/transactions", {
 			signal,
 			params: {
-				transactionFilter: {
-					paginationDto: {
-						page: 0,
-						limit: 10,
-					},
-					transactionGroup: TransactionGroup.ALL,
-					startDate: "2026-04-01",
-					endDate: "2026-04-16",
-				},
+				"paginationDto.page": 0,
+				"paginationDto.limit": 10,
+				transactionGroup: TransactionGroup.ALL,
+				type: undefined,
+				status: undefined,
+				startDate: "2026-04-01",
+				endDate: "2026-04-16",
 			},
 		});
 	});

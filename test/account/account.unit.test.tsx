@@ -109,6 +109,7 @@ describe("account.service unit", () => {
 			id: 1,
 			email: "john@example.com",
 			phoneNumber: "0123456789",
+			number: "123456789012",
 			address: "HCM city",
 			type: AccountType.PERSONAL,
 			status: "ACTIVE",

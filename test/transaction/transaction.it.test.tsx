@@ -43,10 +43,10 @@ server.use(
 	}),
 	http.get(`${ROOT_API_URL}/v1/transactions`, ({ request }) => {
 		const url = new URL(request.url);
-		const transactionGroup = url.searchParams.get("transactionFilter.transactionGroup");
-		const endDate = url.searchParams.get("transactionFilter.endDate");
-		const page = url.searchParams.get("transactionFilter.paginationDto.page");
-		const limit = url.searchParams.get("transactionFilter.paginationDto.limit");
+		const transactionGroup = url.searchParams.get("transactionGroup");
+		const endDate = url.searchParams.get("endDate");
+		const page = url.searchParams.get("paginationDto.page");
+		const limit = url.searchParams.get("paginationDto.limit");
 
 		if (transactionGroup === null || page === null || limit === null) {
 			return new Response(
