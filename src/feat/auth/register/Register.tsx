@@ -134,9 +134,10 @@ const Register = () => {
               </div>
               <input
                 {...inputRegister("phoneNumber")}
-                placeholder="Enter phone number"
+                placeholder="Enter phone number (9 - 11 digits)"
                 value={uniqueDetails.phoneNumber.value}
                 onChange={handleChangeUniqueDetails}
+                pattern="[0-9]{9,11}"
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />

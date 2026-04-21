@@ -30,6 +30,7 @@ export type AccountDto = {
   id: number;
   email: string;
   phoneNumber: string;
+  number: string;
   address: string;
   type: AccountType;
   status: AccountStatus;

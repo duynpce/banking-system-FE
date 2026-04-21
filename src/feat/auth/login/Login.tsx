@@ -61,15 +61,22 @@ const Login = () => {
             Login
           </button>
 
-          {/* Link to Home */}
-          <div className="text-center">
+          {/* Links*/}
+          <div className="flex flex-col justify-center items-center gap-2">
             <Link 
               to="/" 
               className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
             >
               Go to home
             </Link>
+            <Link 
+              to="/register" 
+              className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
+            >
+              do not have an account?
+            </Link>
           </div>
+
         </form>
       </Card>
     </div>

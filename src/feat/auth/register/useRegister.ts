@@ -44,7 +44,7 @@ export const useRegister = () => {
   const debouncedCheckUniqueField = useMemo(
     () =>
       _.debounce(async (name: string, value: string) => {
-        let exists = false;
+        let exists: boolean | undefined = false;
         try {
           exists = await mutateUniqueFieldAsync({ name, value });
         } catch (err) {

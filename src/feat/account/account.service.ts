@@ -26,4 +26,8 @@ export const getAccount = async (signal?: AbortSignal) => {
   return res.data ?? null ;
 }
 
+export const getAccountNameByAccountNumber = async (accountNumber: string, signal?: AbortSignal) => {
+    const res = await api.get<string>(`/v1/accounts/account-number/${accountNumber}`, { signal });
+    return res.data ;
+}
 

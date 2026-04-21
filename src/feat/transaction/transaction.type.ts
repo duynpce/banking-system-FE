@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { PaginationDto } from "../../shared/dto/request.dto";
 
 export const TransactionType = {
 	DEPOSIT: "DEPOSIT",
@@ -18,7 +19,25 @@ export const TransactionStatus = {
 
 export type TransactionStatus = typeof TransactionStatus[keyof typeof TransactionStatus];
 
+export const TransactionGroup = {
+	ALL: "ALL",
+	INCOME: "INCOME",
+	OUTCOME: "OUTCOME",
+} as const;
+
+export type TransactionGroup = typeof TransactionGroup[keyof typeof TransactionGroup];
+
 // OpenAPI: components.schemas.GetTransactionResponse
+
+export interface TransactionFilter {
+	paginationDto: PaginationDto;
+	transactionGroup: TransactionGroup;
+	type?: TransactionType;
+	status?: TransactionStatus;
+	startDate?: string;
+	endDate?: string;
+}
+
 export interface TransactionDto {
 	id: number;
 	senderAccountNumber: string;
@@ -32,11 +51,21 @@ export interface TransactionDto {
 }
 
 // OpenAPI: components.schemas.CreateTransactionRequest
-export const CreateTransactionRequestSchema = z.object({
-	receiverAccountNumber: z.string().trim().length(12, "Receiver account number:must be exactly 12 characters"),
-	description: z.string().min(10, "Description:must be at least 10 characters").trim(),
-	transferredAmount: z.number().min(1, "Transferred amount:must be greater than or equal to 1"),
-	type: z.enum(TransactionType, "Transaction type:invalid transaction type"),
-});
+export const CreateTransactionRequestSchema = z.discriminatedUnion("type", [
+  // account number require (transfer, payment)
+  z.object({
+    type: z.enum([TransactionType.TRANSFER, TransactionType.PAYMENT]),
+    description: z.string().min(10).trim(),
+    transferredAmount: z.number().min(1),
+    receiverAccountNumber: z.string().length(12).regex(/^\d+$/),
+  }),
+  // account number not require (deposit, withdrawal, cashback)
+  z.object({
+    type: z.enum([TransactionType.DEPOSIT, TransactionType.WITHDRAWAL, TransactionType.CASHBACK]),
+    description: z.string().min(10).trim(),
+    transferredAmount: z.number().min(1),
+  }),
+]);
+
 
 export type CreateTransactionRequest = z.infer<typeof CreateTransactionRequestSchema>;

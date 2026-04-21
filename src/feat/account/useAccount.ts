@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	createAccount,
 	getAccount,
+	getAccountNameByAccountNumber,
 	updateAccount,
 } from "./account.service";
 import { type CreateAccountRequest, type UpdateAccountRequest } from './account.type';
@@ -38,3 +39,11 @@ export const useUpdateAccount = () => {
 		});
 	};
 
+	export const useGetAccountNameByAccountNumberQuery = (accountNumber: string) => {
+		return useQuery({
+			queryKey: ["account-name", accountNumber],
+			queryFn: ({signal}) => getAccountNameByAccountNumber(accountNumber, signal),
+			enabled: !!accountNumber && accountNumber.length === 12 && /^\d{12}$/.test(accountNumber), // only run this query if accountNumber is not empty and has 12 digits
+			staleTime: 1 * 60 * 1000, // 1 minute
+		});
+	};
