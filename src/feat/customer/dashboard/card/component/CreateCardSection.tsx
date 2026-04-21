@@ -3,7 +3,7 @@ import Card from "../../../../../shared/component/Card";
 import LoadingSpinner from "../../../../../shared/component/LoadingSpinner";
 import Modal from "../../../../../shared/component/Modal";
 import { CardType } from "../../../../card/card.type";
-import { useCreateCardSection } from "../component/useCreateCardSection";
+import { useCreateCardSection } from "../hook/useCreateCardSection";
 
 const formatCardType = (cardType: string) => `${cardType[0]}${cardType.slice(1).toLowerCase()}`;
 

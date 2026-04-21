@@ -3,7 +3,7 @@ import LoadingSpinner from "../../../../../shared/component/LoadingSpinner";
 import Modal from "../../../../../shared/component/Modal";
 import PaginationBar from "../../../../../shared/component/PaginationBar";
 import Mycard from "../../../../card/Mycard";
-import { useViewCardSection } from "../component/useViewCardSection";
+import { useViewCardSection } from "../hook/useViewCardSection";
 
 const CARD_ICON_STYLES = [
 	{ iconBg: "bg-blue-100", iconText: "text-blue-500" },
@@ -13,9 +13,9 @@ const CARD_ICON_STYLES = [
 
 const ViewCardSection = () => {
 	const {
+		cardPage,
 		setCardPage,
 		cards,
-		cardsMetaData,
 		totalPage,
 		isCardsLoading,
 		isCardsFetching,
@@ -77,7 +77,7 @@ const ViewCardSection = () => {
 				<Mycard card={selectedCardDetail} />
 			</Modal>
 
-			<PaginationBar totalPage={totalPage} setPage={setCardPage} currentPageData={cardsMetaData?.currentPage} />
+			<PaginationBar totalPage={totalPage} setPage={setCardPage} currentPage={cardPage} />
 		</Card>
 	);
 };
