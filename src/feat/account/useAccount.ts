@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	createAccount,
+	editPassword,
 	getAccount,
 	getAccountNameByAccountNumber,
 	updateAccount,
@@ -27,6 +28,15 @@ export const useUpdateAccount = () => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["my-account"] });
+		},
+	});
+};
+
+export const useEditPassword = () => {
+	return useMutation({
+		mutationKey: ["edit-password"],
+		mutationFn: ({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
+			return editPassword(currentPassword, newPassword);
 		},
 	});
 };
