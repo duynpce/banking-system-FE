@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateTransaction } from '../../../../transaction/useTransaction';
 import { useFormCustom } from '../../../../../shared/hook/useFormCustom';
-import { useGetAccountNameByAccountNumberQuery } from '../../../../account/useAccount';
+import { useGetAccountNameByAccountNumberQuery, useGetAccountQuery } from '../../../../account/useAccount';
 import {
   type CreateTransactionRequest,
   CreateTransactionRequestSchema,
@@ -13,6 +13,8 @@ export const useCreateTransactionSection = () => {
   const [isCreateTransactionModalOpen, setIsCreateTransactionModalOpen] = useState(false);
   const [debouncedReceiverAccountNumber, setDebouncedReceiverAccountNumber] = useState('');
   const createTransactionMutation = useCreateTransaction();
+
+  const userAccountNumber = useGetAccountQuery().data?.number ?? '';
 
   const {
     handleSmartSubmit,
@@ -114,6 +116,7 @@ export const useCreateTransactionSection = () => {
     handleCreateTransaction,
     register,
     registerTransactionType,
+    userAccountNumber,
     isReceiverAccountRequired,
     receiverAccountName,
     isReceiverAccountNameLoading,

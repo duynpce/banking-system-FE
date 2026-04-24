@@ -130,6 +130,7 @@ api.interceptors.response.use(
     } else if(error.response?.status === 408) {
       toast.error("Request timeout. Please try again.");  
     } else if(axios.isCancel(error)) {
+      //temp delete when deploy
       toast.error("Request canceled.");
     }
     else if (error.code === 'ERR_NETWORK') {

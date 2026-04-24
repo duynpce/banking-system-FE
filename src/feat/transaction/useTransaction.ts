@@ -2,10 +2,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createTransaction,
   getRelativeStartDate,
+  getTransactionReportsByFilter,
   getTransactionsByFilter,
   toLocalDateString,
 } from "./transaction.service";
-import { TransactionGroup, TransactionStatus, TransactionType, type CreateTransactionRequest } from './transaction.type';
+import { TransactionGroup, TransactionStatus, TransactionType, type CreateTransactionRequest, type TransactionReportFilter } from './transaction.type';
+import { queryClient } from "../../config/userQuery.config";
 
 
 type TransactionPeriod = "week" | "month" | "year" ;
@@ -14,6 +16,9 @@ export const useCreateTransaction = () => {
   return useMutation({
     mutationKey: ["create-transaction"],
     mutationFn: (request: CreateTransactionRequest) => createTransaction(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+    },
   });
 };
 
@@ -88,5 +93,46 @@ export const useGetTransactionsWithPagination = (page: number, limit: number,tra
         signal,
       ),
     enabled: Number.isFinite(page) && page >= 0 && Number.isFinite(limit) && limit > 0,
+  });
+};
+
+export const useGetTransactionsReportByFilter = (transactionReportFilter: TransactionReportFilter) => {
+  const isValidYear = Number.isFinite(transactionReportFilter.year) && Number(transactionReportFilter.year) >= 2000;
+  const isValidMonth = Number.isFinite(transactionReportFilter.month) && Number(transactionReportFilter.month) >= 1 && Number(transactionReportFilter.month) <= 12;
+  const isValidWeek = Number.isFinite(transactionReportFilter.week) && Number(transactionReportFilter.week) >= 1 && Number(transactionReportFilter.week) <= 5;
+  const isValidDay = Number.isFinite(transactionReportFilter.day) && Number(transactionReportFilter.day) >= 1 && Number(transactionReportFilter.day) <= 31;
+
+  const isEnabled = (() => {
+    if (transactionReportFilter.reportType === "DAY") {
+      return isValidYear && isValidMonth && isValidDay;
+    }
+
+    if (transactionReportFilter.reportType === "WEEK") {
+      return isValidYear && isValidMonth && isValidWeek;
+    }
+
+    if (transactionReportFilter.reportType === "MONTH") {
+      return isValidYear && isValidMonth;
+    }
+
+    return isValidYear;
+  })();
+
+  return useQuery({
+    queryKey: [
+      "transactions", "reports",
+      transactionReportFilter.reportType,
+      transactionReportFilter.year,
+      transactionReportFilter.month,
+      transactionReportFilter.week,
+      transactionReportFilter.day,
+    ],
+    queryFn: async ({ signal }) => {  
+      const res = await getTransactionReportsByFilter(
+        transactionReportFilter, signal  
+      );
+      return res.data;
+    },
+    enabled: isEnabled,
   });
 };

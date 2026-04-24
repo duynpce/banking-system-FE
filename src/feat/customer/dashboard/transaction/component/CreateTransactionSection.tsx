@@ -14,6 +14,7 @@ const CreateTransactionSection = () => {
     register,
     registerTransactionType,
     isReceiverAccountRequired,
+    userAccountNumber,
     receiverAccountName,
     isReceiverAccountNameLoading,
     isReceiverAccountNotFound,
@@ -67,6 +68,7 @@ const CreateTransactionSection = () => {
           <InputWithLabel
             label="Amount"
             type="number"
+            step={0.0001}
             min={1}
             {...register("transferredAmount", { valueAsNumber: true })}
           />
@@ -89,7 +91,7 @@ const CreateTransactionSection = () => {
               <span className="text-xs text-gray-500">Checking receiver account...</span>
             )}
 
-            {!isReceiverAccountNameLoading && receiverAccountName && (
+            {!isReceiverAccountNameLoading && receiverAccountName && debouncedReceiverAccountNumber !== userAccountNumber && (
               <span className="text-xs text-green-600">Receiver: {receiverAccountName}</span>
             )}
 
@@ -98,6 +100,16 @@ const CreateTransactionSection = () => {
                 No account found with account number: {debouncedReceiverAccountNumber}
               </span>
             )}
+
+
+
+            {
+              debouncedReceiverAccountNumber === userAccountNumber && (
+                <span className="text-xs text-red-600">
+                  Receiver account number cannot be the same as your account number.
+                </span>
+              )
+            }
             </div>
             
           )}

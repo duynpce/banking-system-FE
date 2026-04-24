@@ -50,6 +50,37 @@ export interface TransactionDto {
 	postedBalance: number;
 }
 
+export const TransactionReportType = {
+	DAY: "DAY",
+	WEEK: "WEEK",
+	MONTH: "MONTH",
+	YEAR: "YEAR",
+} as const;
+
+export type TransactionReportType = typeof TransactionReportType[keyof typeof TransactionReportType];
+
+export interface TransactionReportFilter {
+	reportType: TransactionReportType;
+	day?: number;
+	week?: number;
+	month?: number;
+	year?: number;
+}
+
+export interface TransactionReportDto {
+	reportType: TransactionReportType;
+	startDate: string;
+	endDate: string;
+	incomeAmount: number;
+	outcomeAmount: number;
+	incomeTransferAmount: number;
+	outcomeTransferAmount: number;
+	cashbackAmount: number;
+	paymentAmount: number;
+	depositAmount: number;
+	withdrawalAmount: number;
+}
+
 // OpenAPI: components.schemas.CreateTransactionRequest
 export const CreateTransactionRequestSchema = z.discriminatedUnion("type", [
   // account number require (transfer, payment)
