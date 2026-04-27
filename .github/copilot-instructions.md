@@ -49,6 +49,7 @@ Feature-based folder structure. Each feature follows this pattern:
     - If you need more context about the project, ask me before implementing
     - Give the documentation link where you found the solution if you are not confident
     - Never change unrelated code while implementing a feature
+    - read files in /shared / component and /hooks to reuse existing components and hooks before creating new ones
 
 # shared components
 

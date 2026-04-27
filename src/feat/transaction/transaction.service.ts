@@ -1,5 +1,11 @@
 import { api } from "../../config/axios/api";
-import type { CreateTransactionRequest, TransactionDto, TransactionFilter } from "./transaction.type";
+import type {
+  CreateTransactionRequest,
+  TransactionDto,
+  TransactionFilter,
+  TransactionReportDto,
+  TransactionReportFilter,
+} from "./transaction.type";
 
 
 type DateInput = Date | string;
@@ -39,6 +45,22 @@ export const getTransactionsByFilter = async (transactionFilter: TransactionFilt
       "status": transactionFilter.status,
       "startDate": transactionFilter.startDate,
       "endDate": transactionFilter.endDate,
+    },
+  });
+};
+
+export const getTransactionReportsByFilter = async (
+  transactionReportFilter: TransactionReportFilter,
+  signal?: AbortSignal,
+) => {
+  return await api.get<TransactionReportDto[]>("/v1/transactions/reports", {
+    signal,
+    params: {
+      "reportType": transactionReportFilter.reportType,
+      "year": transactionReportFilter.year,
+      "month": transactionReportFilter.month,
+      "week": transactionReportFilter.week,
+      "day": transactionReportFilter.day,
     },
   });
 };

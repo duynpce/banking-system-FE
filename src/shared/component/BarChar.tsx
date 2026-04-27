@@ -18,8 +18,9 @@ export type Period = "day" | "week" | "month" | "year";
 
 type BarCharProps = {
   bars: BarConfig[];
-  data: Record<string, unknown>[];
+  data: object[];
   period: Period;
+  xAxisDataKey?: string;
 };
 
 const xAxisKeyMap: Record<Period, string> = {
@@ -29,8 +30,8 @@ const xAxisKeyMap: Record<Period, string> = {
   year: "month",
 };
 
-const BarChar = ({ bars, data, period }: BarCharProps) => {
-  const xAxisKey = xAxisKeyMap[period];
+const BarChar = ({ bars, data, period, xAxisDataKey }: BarCharProps) => {
+  const xAxisKey = xAxisDataKey ?? xAxisKeyMap[period];
 
   return (
     <div className="mb-4">

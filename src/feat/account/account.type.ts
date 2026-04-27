@@ -31,28 +31,29 @@ export type AccountDto = {
   email: string;
   phoneNumber: string;
   number: string;
+  balance: number;
   address: string;
   type: AccountType;
   status: AccountStatus;
 };
 
 export type PersonalAccountDto = AccountDto & {
-type: typeof AccountType.PERSONAL;
-fullName: string;
-idCardNumber: string;
-dateOfBirth: string;
-gender: Gender;
+  type: typeof AccountType.PERSONAL;
+  fullName: string;
+  idCardNumber: string;
+  dateOfBirth: string;
+  gender: Gender;
 };
 
 export type BusinessAccountDto = AccountDto & {
-type: typeof AccountType.BUSINESS;
-organizationName: string;
-taxIdNumber: string;
+  type: typeof AccountType.BUSINESS;
+  organizationName: string;
+  taxIdNumber: string;
 };
 
 export type GovernmentAccountDto = AccountDto & {
-type: typeof AccountType.GOVERNMENT;
-governmentDepartment: string;
+  type: typeof AccountType.GOVERNMENT;
+  governmentDepartment: string;
 };
 
 export type AccountDetailDto =
@@ -84,13 +85,24 @@ export const CreatePersonalAccountRequestSchema = baseCreateAccountSchema.extend
   gender : z.enum(Gender, "Gender:invalid gender"),
   fullName: z.string().min(3, "Full name:need at least 3 characters").trim(),
   idCardNumber: z.string().min(9, "Id card number:need at least 9 characters").max(15, "Id card number:can have at most 15 characters").trim(),
-  dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "Date of birth:invalid date format").trim()
-  // .check((dateOfBirth) => {
-  //   const today = new Date();
-  //   const birthDate = new Date(dateOfBirth);
-  //   const age = today.getFullYear() - birthDate.getFullYear();
-  //   return age >= 18;
-  // }, "Date of birth:must be at least 18 years old")
+  dateOfBirth: z.string()
+    .trim()
+    .refine((date) => !Number.isNaN(Date.parse(date)), "Date of birth:invalid date format")
+    .refine((dateOfBirth) => {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const hasNotHadBirthdayYet =
+        today.getMonth() < birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
+
+      if (hasNotHadBirthdayYet) {
+        age -= 1;
+      }
+
+      return age >= 18;
+    }, "Date of birth:must be at least 18 years old")
 });
 
 export const CreateBusinessAccountRequestSchema = baseCreateAccountSchema.extend({
@@ -129,7 +141,24 @@ export const UpdatePersonalAccountRequestSchema = BaseUpdateAccountRequestSchema
   type: z.literal(AccountType.PERSONAL),
   fullName: z.string().min(3, "Full name:need at least 3 characters").trim(),
   idCardNumber: z.string().min(9, "Id card number:need at least 9 characters").max(12, "Id card number:can have at most 12 characters").trim(),
-  dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), "Date of birth:invalid date format").trim(),
+  dateOfBirth: z.string()
+    .trim()
+    .refine((date) => !Number.isNaN(Date.parse(date)), "Date of birth:invalid date format")
+    .refine((dateOfBirth) => {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const hasNotHadBirthdayYet =
+        today.getMonth() < birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
+
+      if (hasNotHadBirthdayYet) {
+        age -= 1;
+      }
+
+      return age >= 18;
+    }, "Date of birth:must be at least 18 years old")
 });
 
 export const UpdateBusinessAccountRequestSchema = BaseUpdateAccountRequestSchema.extend({
@@ -152,3 +181,15 @@ export const updateAccountRequestSchema = z.discriminatedUnion("type", [
 
 export type UpdateAccountRequest = z.infer<typeof updateAccountRequestSchema>;
 
+export const editPasswordRequestSchema = z.object({
+  currentPassword: z.string().min(1, "Current password:is required"),
+  newPassword: z
+    .string()
+    .min(8, "New password:need at least 8 characters")
+    .regex(/[a-z]/, "New password:need 1 lowercase letter")
+    .regex(/[A-Z]/, "New password:need 1 uppercase letter")
+    .regex(/[0-9]/, "New password:need 1 digit")
+    .regex(/[@$!%*?&]/, "New password:need 1 special character"),
+});
+
+export type EditPasswordRequest = z.infer<typeof editPasswordRequestSchema>;

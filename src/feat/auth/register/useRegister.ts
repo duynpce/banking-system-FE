@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { AccountType, createAccountRequestSchema, Gender, type CreateAccountRequest } from '../../account/account.type';
 import {
+  type UniqueField,
   type UniqueDetail,
   checkUniqueField,
-} from "./register.service";
+} from "../../account/account.service";
 import {
   handleChangeExistsForUniqueDetails,
   handleChangeValueForUniqueDetails,
@@ -36,7 +37,7 @@ export const useRegister = () => {
 
   //use mutate to get built-in states like isPending, isSuccess, isError
   const uniqueFieldMutation = useMutation({
-    mutationFn: ({ name, value }: { name: string; value: string }) =>
+    mutationFn: ({ name, value }: { name: UniqueField; value: string }) =>
       checkUniqueField(name, value),
   });
   const { mutateAsync: mutateUniqueFieldAsync } = uniqueFieldMutation;
@@ -46,7 +47,7 @@ export const useRegister = () => {
       _.debounce(async (name: string, value: string) => {
         let exists: boolean | undefined = false;
         try {
-          exists = await mutateUniqueFieldAsync({ name, value });
+          exists = await mutateUniqueFieldAsync({ name: name as UniqueField, value });
         } catch (err) {
           console.error("Error checking unique field:", err);
         } finally {

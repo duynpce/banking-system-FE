@@ -38,8 +38,8 @@ const Transaction = ({ transaction, accountNumber }: TransactionProps) => {
 				<InfoItem title="Sender account" value={transaction.senderAccountNumber} />
 				<InfoItem title="Receiver account" value={transaction.receiverAccountNumber} />
 				<InfoItem title="Description" value={transaction.description} />
-				<InfoItem title="Transferred amount" value={`${amountPrefix}${transaction.transferredAmount.toLocaleString()}`} />
-				<InfoItem title="Posted balance" value={transaction.postedBalance.toLocaleString()} />
+				<InfoItem title="Transferred amount" value={`${amountPrefix}${transaction.transferredAmount.toFixed(4)}`} />
+				<InfoItem title="Posted balance" value={transaction.postedBalance.toFixed(4)} />
 			</section>
 		</Card>
 	);
