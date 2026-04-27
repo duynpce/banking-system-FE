@@ -108,6 +108,7 @@ describe("account.service unit", () => {
 		const account:AccountDto = {
 			id: 1,
 			email: "john@example.com",
+			balance: 1000,
 			phoneNumber: "0123456789",
 			number: "123456789012",
 			address: "HCM city",
