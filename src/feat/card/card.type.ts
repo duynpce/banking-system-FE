@@ -32,7 +32,7 @@ export const CreatePersonalCardRequestSchema = BaseCardRequestSchema.extend({
 
 export const CreateBusinessCardRequestSchema = BaseCardRequestSchema.extend({
   forAccountType: z.literal(AccountType.BUSINESS),
-  holder: z.string().min(3, "Card holder name must be at least 3 characters").trim(),
+  holder: z.string().min(3, "Card holder: name must be at least 3 characters").trim(),
 });
 
 //this schema is just a placeholder to satisfy the discriminated union requirement

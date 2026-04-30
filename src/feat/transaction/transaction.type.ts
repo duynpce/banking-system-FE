@@ -85,16 +85,19 @@ export interface TransactionReportDto {
 export const CreateTransactionRequestSchema = z.discriminatedUnion("type", [
   // account number require (transfer, payment)
   z.object({
-    type: z.enum([TransactionType.TRANSFER, TransactionType.PAYMENT]),
-    description: z.string().min(10).trim(),
-    transferredAmount: z.number().min(1),
-    receiverAccountNumber: z.string().length(12).regex(/^\d+$/),
+    type: z.enum([TransactionType.TRANSFER, TransactionType.PAYMENT], "Type: invalid transaction type"),
+    description: z.string().min(10, "Description: must be at least 10 characters").trim(),
+    transferredAmount: z.number().min(1, "Transferred amount: must be at least 1"),
+    receiverAccountNumber: z
+      .string()
+      .length(12, "Receiver account number: must be exactly 12 digits")
+      .regex(/^\d+$/, "Receiver account number: must contain only digits"),
   }),
   // account number not require (deposit, withdrawal, cashback)
   z.object({
-    type: z.enum([TransactionType.DEPOSIT, TransactionType.WITHDRAWAL, TransactionType.CASHBACK]),
-    description: z.string().min(10).trim(),
-    transferredAmount: z.number().min(1),
+    type: z.enum([TransactionType.DEPOSIT, TransactionType.WITHDRAWAL, TransactionType.CASHBACK], "Type: invalid transaction type"),
+    description: z.string().min(10, "Description: must be at least 10 characters").trim(),
+    transferredAmount: z.number().min(1, "Transferred amount: must be at least 1"),
   }),
 ]);
 
