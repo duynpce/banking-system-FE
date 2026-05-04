@@ -24,5 +24,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
   },
-  "include": ["src", "test", "src/types/ImgButtonProps.ts"]
+  "include": ["src", "test", "src/shared/types/ImgButtonProps.ts"]
 }

@@ -1,7 +1,15 @@
 
 import type { ChangeEvent } from "react";
 import {  expect, test, vi } from "vitest";
-import { handleChange, handleChangeValueForUniqueDetails, handleChangeExistsForUniqueDetails, trimObjectValues } from '../../src/utils/util';
+import {
+  handleChange,
+  handleChangeValueForUniqueDetails,
+  handleChangeExistsForUniqueDetails,
+  trimObjectValues,
+  getDataFromForm,
+  getTrimmedDataFromForm,
+  getAlertConfig,
+} from '../../src/shared/utils/util';
 
 test("test handleChange " ,  () => {
     //evm
@@ -117,4 +125,45 @@ test("test trimObjectValues", () => {
       age: 25,
       active: true
     });
+});
+
+test("test getDataFromForm", () => {
+    const formData = new FormData();
+    formData.append("username", "  testUser  ");
+    formData.append("password", "  pass123  ");
+
+    const result = getDataFromForm(formData);
+
+    expect(result).toEqual({
+      username: "  testUser  ",
+      password: "  pass123  "
+    });
+});
+
+test("test getTrimmedDataFromForm", () => {
+    const formData = new FormData();
+    formData.append("username", "  testUser  ");
+    formData.append("password", "  pass123  ");
+
+    const result = getTrimmedDataFromForm(formData);
+
+    expect(result).toEqual({
+      username: "testUser",
+      password: "pass123"
+    });
+});
+
+test("test getAlertConfig with no params", () => {
+    const searchParams = new URL("http://localhost").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("");
+});
+
+test("test getAlertConfig with typeofOperation param", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("typeofOperation: state");
+});
+
+test("test getAlertConfig with multiple params returns first", () => {
+    const searchParams = new URL("http://localhost?typeofOperation=state&other=foo").searchParams;
+    expect(getAlertConfig(searchParams)).toBe("typeofOperation: state");
 });
