@@ -33,3 +33,8 @@ export const getLoanPolicyById = async (id: number, signal?: AbortSignal) => {
   const res = await api.get<LoanPolicyDto>(`/v1/loan-policies/${id}`, { signal });
   return res.data ?? null;
 };
+
+export const getByLoanType = async (loanType: LoanType, signal?: AbortSignal) => {
+  const res = await api.get<LoanPolicyDto[]>(`/v1/loan-policies`, { signal, params: { loanType } });
+  return res.data ?? [];
+}

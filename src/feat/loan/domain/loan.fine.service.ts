@@ -16,11 +16,11 @@ export const getLoanFinesByPage = async (paginationDto: PaginationDto, signal?: 
   const res = await api.get<LoanFineDto[]>("/v1/loan-fines", {
     signal,
     params: {
-      "paginationDto.page": paginationDto.page,
-      "paginationDto.limit": paginationDto.limit,
+      "page": paginationDto.page,
+      "limit": paginationDto.limit,
     },
   });
-  return res.data ?? [];
+  return res ?? null;
 };
 
 export const getLoanFineById = async (id: number, signal?: AbortSignal) => {

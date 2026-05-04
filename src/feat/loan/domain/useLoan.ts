@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../../config/userQuery.config";
-import { createLoan, getLoanById, getLoanReport, getLoansByFilter } from "./loan.service";
+import { createLoan, getLoanById, getLoanReport, getLoansByFilter, repayLoan } from "./loan.service";
 import type { CreateLoanRequest, LoanFilter, LoanStatus, LoanType } from "./loan.type";
 
 export const useCreateLoan = () => {
@@ -10,6 +10,16 @@ export const useCreateLoan = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["loans"] });
     },
+  });
+};
+
+export const useRepayLoan = (loanId: number , amount: number) => {
+  return useMutation({
+    mutationKey: ["repay-loan"],
+    mutationFn: () => repayLoan({ loanId, amount }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["loans"] });
+    } 
   });
 };
 

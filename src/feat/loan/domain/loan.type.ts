@@ -50,3 +50,10 @@ export const CreateLoanRequestSchema = z.object({
 });
 
 export type CreateLoanRequest = z.infer<typeof CreateLoanRequestSchema>;
+
+export const RepayLoanRequestSchema = z.object({
+  loanId: z.number().int().min(1, "Loan: must select a valid loan"),
+  amount: z.number().min(0.0001, "Repay amount: must be at least 0.0001"),
+});
+
+export type RepayLoanRequest = z.infer<typeof RepayLoanRequestSchema>;

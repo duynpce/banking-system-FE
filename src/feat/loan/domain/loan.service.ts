@@ -5,12 +5,18 @@ import type {
   LoanFilter,
   LoanReportDto,
   LoanStatus,
+  RepayLoanRequest,
 } from "./loan.type";
 
 export const createLoan = async (request: CreateLoanRequest) => {
   const res = await api.post<string>("/v1/loans", request, { toastMessageWhenSuccess: true });
   return res.data ?? null;
 };
+
+export const repayLoan = async (request: RepayLoanRequest) => {
+  const res = await api.post<string>("/v1/loans/repay", request, { toastMessageWhenSuccess: true });
+  return res.data ?? null;
+}
 
 export const getLoansByFilter = async (filter: LoanFilter, signal?: AbortSignal) => {
   const res = await api.get<LoanDto[]>("/v1/loans", {
@@ -24,7 +30,7 @@ export const getLoansByFilter = async (filter: LoanFilter, signal?: AbortSignal)
       "endDate": filter.endDate,
     },
   });
-  return res.data ?? [];
+  return res ?? null;
 };
 
 export const getLoanById = async (id: number, signal?: AbortSignal) => {

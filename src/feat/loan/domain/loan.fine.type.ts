@@ -5,6 +5,13 @@ export const LoanFineType = {
   EARLY_PAYMENT: "EARLY_PAYMENT",
 } as const;
 
+export const LoanFineStatus = {
+  UNPAID: "UNPAID",
+  PAID: "PAID",
+} as const;
+
+export type LoanFineStatus = typeof LoanFineStatus[keyof typeof LoanFineStatus];
+
 export type LoanFineType = typeof LoanFineType[keyof typeof LoanFineType];
 
 export interface LoanFineDto {
@@ -13,6 +20,7 @@ export interface LoanFineDto {
   amount: number;
   createdAt: string;
   type: LoanFineType;
+  status: LoanFineStatus;
 }
 
 export const CreateLoanFineRequestSchema = z.object({
