@@ -79,7 +79,7 @@ describe("loan.service unit – Loans", () => {
 
     mockGet.mockResolvedValue({ data: payload, success: true });
 
-    const result = await getLoansByFilter(filter, signal);
+    const result = (await getLoansByFilter(filter, signal)).data;
 
     expect(result).toEqual(payload);
     expect(mockGet).toHaveBeenCalledWith("/v1/loans", {

@@ -149,7 +149,7 @@ const LoanListView = ({ page, limit }: { page: number; limit: number }) => {
   if (isLoading) return <span>Loading</span>;
   if (isError) return <span>Error</span>;
 
-  return <span>loan-count:{data?.length ?? 0}</span>;
+  return <span>loan-count:{data?.data.length ?? 0}</span>;
 };
 
 const LoanByIdView = ({ id }: { id: number }) => {

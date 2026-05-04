@@ -12,6 +12,19 @@ import {
 import { LoanFineType } from "../../../src/feat/loan/domain/loan.fine.type";
 import { ROOT_API_URL } from "../../../src/shared/constant/constant";
 import { server } from "../../config/server.config";
+import { type PaginationDto } from '../../../src/shared/dto/request.dto';
+// ──────────────────────────── Test data ────────────────────────────
+
+const defaultLoanFineList = [
+  {
+    id: 1,
+    loanId: 1,
+    amount: 200,
+    createdAt: "2026-01-15",
+    type: LoanFineType.OVERDUE_PAYMENT,
+  },
+];
+
 
 // ──────────────────────────── MSW Handlers ────────────────────────────
 
@@ -34,7 +47,7 @@ server.use(
 
   http.get(`${ROOT_API_URL}/v1/loan-fines`, ({ request }) => {
     const url = new URL(request.url);
-    const page = url.searchParams.get("paginationDto.page");
+    const page = url.searchParams.get("page");
 
     if (page === "0") {
       return new Response(
@@ -74,18 +87,6 @@ server.use(
   }),
 );
 
-// ──────────────────────────── Test data ────────────────────────────
-
-const defaultLoanFineList = [
-  {
-    id: 1,
-    loanId: 1,
-    amount: 200,
-    createdAt: "2026-01-15",
-    type: LoanFineType.OVERDUE_PAYMENT,
-  },
-];
-
 // ──────────────────────────── Test components ────────────────────────────
 
 const CreateLoanFineForm = ({ loanId }: { loanId: number }) => {
@@ -111,12 +112,14 @@ const CreateLoanFineForm = ({ loanId }: { loanId: number }) => {
 };
 
 const LoanFineListView = ({ page, limit }: { page: number; limit: number }) => {
-  const { data, isLoading, isError } = useGetLoanFinesWithPagination({ page, limit });
+  const paginationDto:PaginationDto = { page, limit };
+  const { data, isLoading, isError } = useGetLoanFinesWithPagination(paginationDto);
 
   if (isLoading) return <span>Loading</span>;
   if (isError) return <span>Error</span>;
 
-  return <span>fine-count:{data?.length ?? 0}</span>;
+  return <span>fine-count:{data?.data.length ?? 0}</span>;
+  
 };
 
 const LoanFineByIdView = ({ id }: { id: number }) => {

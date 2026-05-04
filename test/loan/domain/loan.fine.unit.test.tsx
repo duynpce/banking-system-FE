@@ -98,12 +98,12 @@ describe("loanFine.service unit – Loan Fines", () => {
 
     mockGet.mockResolvedValue({ data: payload, success: true });
 
-    const result = await getLoanFinesByPage(paginationDto, signal);
+    const result = (await getLoanFinesByPage(paginationDto, signal)).data;
 
     expect(result).toEqual(payload);
     expect(mockGet).toHaveBeenCalledWith("/v1/loan-fines", {
       signal,
-      params: { "paginationDto.page": 0, "paginationDto.limit": 10 },
+      params: { "page": 0, "limit": 10 },
     });
   });
 
