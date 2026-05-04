@@ -10,10 +10,10 @@ import CustomerDashboardOverView from "./feat/customer/dashboard/overview/compon
 import CustomerDashboardTransaction from "./feat/customer/dashboard/transaction/component/CustomerDashboardTransaction";
 import CustomerDashboardAccount from "./feat/customer/dashboard/account/component/CustomerDashboardAccount";
 import CustomerDashboardCard from "./feat/customer/dashboard/card/component/CustomerDashboardCard";
-import CustomerDashboardLoan from "./feat/customer/loan/CustomerDashboardLoan";
 import ToastProvider from "./config/ToastProvider.config";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./config/userQuery.config";
+import CustomerDashboardLoan from "./feat/customer/dashboard/loan/component/CustomerDashboardLoan";
 
 function App() {
   return (

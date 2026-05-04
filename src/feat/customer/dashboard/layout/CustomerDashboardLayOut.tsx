@@ -15,9 +15,6 @@ const CustomerDashboardLayOut = () => {
         <Link to="/dashboard/accounts">Accounts</Link>
         <Link to="/dashboard/cards">Cards</Link>
         <Link to="/dashboard/loans">Loans</Link>
-        <Link to="/dashboard/service">Service</Link>
-        <Link to="/dashboard/my-privileges">My Privileges</Link>
-        <Link to="/dashboard/settings">Settings</Link>
       </aside>
 
       <section className="col-span-9 flex flex-col border border-gray-300">

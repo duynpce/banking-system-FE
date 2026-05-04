@@ -125,7 +125,7 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
      
-    } else if (error.response?.status === 403) {
+    } else if (error.response?.status === 403 && !error.response.data.message) {
       toast.error("You don't have permission to access this resource.");
     } else if(error.response?.status === 408) {
       toast.error("Request timeout. Please try again.");  
