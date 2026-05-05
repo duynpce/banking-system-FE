@@ -90,10 +90,10 @@ api.interceptors.response.use(
       
       if(originalRequest._retry) {
         toast.error("expried sesssion or not logged in", {
+          toastId: "session-expired",
           onClose: () => window.location.assign("/login"),
           autoClose: 2000, 
         });
-        console.log("refresh token failed")
         delete api.defaults.headers.common["Authorization"];
         setAccessToken(null);
         sessionStorage.setItem("previousPath", window.location.pathname);
@@ -116,6 +116,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         toast.error("expried sesssion or not logged in", {
+          toastId: "session-expired",
           onClose: () => window.location.assign("/login"),
           autoClose: 2000,
         });
@@ -129,9 +130,9 @@ api.interceptors.response.use(
       toast.error("You don't have permission to access this resource.");
     } else if(error.response?.status === 408) {
       toast.error("Request timeout. Please try again.");  
-    } else if(axios.isCancel(error)) {
-      //temp delete when deploy
-      toast.error("Request canceled.");
+    }
+    if(axios.isCancel(error)) {
+      Promise.reject(error);
     }
     else if (error.code === 'ERR_NETWORK') {
       toast.error("Please check your connection.");

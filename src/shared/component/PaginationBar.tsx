@@ -34,7 +34,6 @@ const PaginationBar = ({ totalPage, setPage, currentPage }: PaginationBarProps) 
     setIsGoToPageOpen(false);
   };
 
-  console.log(toPage);
 
 
   return (

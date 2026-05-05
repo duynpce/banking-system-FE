@@ -1,6 +1,7 @@
 import { AccountType } from '../../account/account.type';
 import { useRegister } from './useRegister';
 import Card from '../../../shared/component/Card';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const {
@@ -303,6 +304,8 @@ const Register = () => {
             {isRegisterPending ? 'Registering...' : 'Register'}
           </button>
         </form>
+
+        <Link to="/login" className="mt-4 block text-center text-sm text-gray-600 hover:underline">Already have an account? Log in</Link> 
       </Card>
     </div>
   );
