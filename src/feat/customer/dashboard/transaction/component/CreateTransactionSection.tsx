@@ -1,5 +1,6 @@
 import { useCreateTransactionSection } from "../hook/useCreateTransactionSection";
 import Button from "../../../../../shared/component/Button";
+import addIcon from "../../../../../assets/icon/add.svg";
 import Modal from "../../../../../shared/component/Modal";
 import InputWithLabel from "../../../../../shared/component/InputWithLabel";
 import SelectWithLabel from "../../../../../shared/component/SelectWithLabel";
@@ -36,7 +37,7 @@ const CreateTransactionSection = () => {
         onClick={() => setIsCreateTransactionModalOpen(true)}
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-          <img src="/src/assets/icon/add.svg" alt="Add Transaction" className="h-4 w-4" />
+          <img src={addIcon} alt="Add Transaction" className="h-4 w-4" />
         </span>
         <span>Create New Transaction</span>
       </button>
