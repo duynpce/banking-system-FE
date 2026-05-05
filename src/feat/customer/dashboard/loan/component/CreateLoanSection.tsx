@@ -1,4 +1,5 @@
 import Button from "../../../../../shared/component/Button";
+import addIcon from "../../../../../assets/icon/add.svg";
 import InputWithLabel from "../../../../../shared/component/InputWithLabel";
 import LoadingSpinner from "../../../../../shared/component/LoadingSpinner";
 import Modal from "../../../../../shared/component/Modal";
@@ -33,7 +34,7 @@ const CreateLoanSection = () => {
         onClick={() => setIsCreateLoanModalOpen(true)}
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-          <img src="/src/assets/icon/add.svg" alt="Add Loan" className="h-4 w-4" />
+          <img src={addIcon} alt="Add Loan" className="h-4 w-4" />
         </span>
         <span>Create New Loan</span>
       </button>

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ImgButton from "../../shared/component/ImgButton";
+import profileIcon from "../../assets/icon/profile.svg";
 
 const DOMAINS = [
   {
@@ -50,7 +51,7 @@ const Home = () => {
             </Link>
             <ImgButton
               alt="profile"
-              src="/src/assets/icon/profile.svg"
+              src={profileIcon}
               className="h-10 w-10 rounded-full bg-blue-500 hover:bg-blue-400 transition p-1"
               onClick={() => navigate("dashboard/accounts")}
               title="Go to My Account"
