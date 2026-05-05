@@ -8,7 +8,7 @@ export const useCreateLoan = () => {
     mutationKey: ["create-loan"],
     mutationFn: (request: CreateLoanRequest) => createLoan(request),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["loans"] });
+      queryClient.invalidateQueries({ queryKey: ["loans", "loan-reports"] });
     },
   });
 };
@@ -18,7 +18,7 @@ export const useRepayLoan = (loanId: number , amount: number) => {
     mutationKey: ["repay-loan"],
     mutationFn: () => repayLoan({ loanId, amount }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["loans"] });
+      queryClient.invalidateQueries({ queryKey: ["loans", "loan-reports"] });
     } 
   });
 };
@@ -61,7 +61,7 @@ export const useGetLoanById = (id: number) => {
 
 export const useGetLoanReport = (loanStatus?: LoanStatus) => {
   return useQuery({
-    queryKey: ["loans", "reports", loanStatus],
+    queryKey: ["loans", "loan-reports", loanStatus],
     queryFn: ({ signal }) => getLoanReport(loanStatus, signal),
   });
 };

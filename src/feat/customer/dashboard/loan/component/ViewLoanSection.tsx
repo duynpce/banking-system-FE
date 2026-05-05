@@ -87,7 +87,7 @@ const ViewLoanSection = () => {
               <span>${loan.leftAmount.toLocaleString()}</span>
               <span>{loan.durationMonths} months</span>
               <span>{loan.interestRate}%</span>
-              <span>${(loan.totalAmount / loan.durationMonths + (loan.totalAmount * loan.interestRate / 100)).toFixed(4)} / month</span>
+              <span>${(loan.leftAmount / loan.durationMonths + (loan.leftAmount * loan.interestRate / 100)).toFixed(4)} / month</span>
               <span>{formatDate(loan.dueDate)}</span>
               <button
                 type="button"
