@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import ImgButton from "../../shared/component/ImgButton";
 import profileIcon from "../../assets/icon/profile.svg";
+import { Button } from "@headlessui/react";
+import { useLogout } from "../auth/logout/useLogout";
 
 const DOMAINS = [
   {
@@ -34,6 +36,7 @@ const TECH_STACK = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const logoutMutation = useLogout();
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
@@ -49,6 +52,7 @@ const Home = () => {
             >
               Login
             </Link>
+            <Button onClick={() => logoutMutation.mutate()}>Logout</Button>
             <ImgButton
               alt="profile"
               src={profileIcon}
