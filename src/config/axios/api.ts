@@ -127,19 +127,28 @@ api.interceptors.response.use(
       }
      
     } else if (error.response?.status === 403 && !error.response.data.message) {
-      toast.error("You don't have permission to access this resource.");
+      toast.error("You don't have permission to access this resource.", {
+        toastId: "forbidden-error",
+      });
     } else if(error.response?.status === 408) {
-      toast.error("Request timeout. Please try again.");  
+      toast.error("Request timeout. Please try again.", {
+        toastId: "timeout-error",
+      });  
     }
     if(axios.isCancel(error)) {
       Promise.reject(error);
     }
     else if (error.code === 'ERR_NETWORK') {
-      toast.error("Please check your connection.");
+      toast.error("Please check your connection.",{
+        toastId: "network-error",
+      });
     }
     else {
-      toast.error(error.response?.data?.message || "An error occurred. Please try again.");
-      
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again.", {
+          toastId: "generic-error",
+        }
+      );
     }
 
     return Promise.reject(error);
