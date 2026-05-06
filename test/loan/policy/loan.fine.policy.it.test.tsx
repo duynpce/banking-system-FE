@@ -187,7 +187,7 @@ describe("loanFinePolicy integration", () => {
     await user.click(screen.getByRole("button", { name: "Add Fine Policy" }));
 
     await waitFor(() => {
-      expect(toastErrorSpy).toHaveBeenCalledWith("invalid fine type");
+      expect(toastErrorSpy).toHaveBeenCalledWith("invalid fine type", { toastId: "generic-error" });
     });
   });
 });

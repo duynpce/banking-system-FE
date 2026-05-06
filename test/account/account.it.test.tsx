@@ -141,7 +141,7 @@ describe("account integration", () => {
 		renderWithProvider(<GetAccountView />);
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("get account failed");
+			expect(toastErrorSpy).toHaveBeenCalledWith("get account failed", { toastId: "generic-error" });
 		});
 	});
 
@@ -173,7 +173,7 @@ describe("account integration", () => {
 		await user.click(screen.getByRole("button", { name: "Update Account" }));
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("update account failed");
+			expect(toastErrorSpy).toHaveBeenCalledWith("update account failed", { toastId: "generic-error" });
 		});
 	});
 });

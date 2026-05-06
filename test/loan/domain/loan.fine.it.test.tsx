@@ -189,7 +189,7 @@ describe("loanFine integration", () => {
     await user.click(screen.getByRole("button", { name: "Add Fine" }));
 
     await waitFor(() => {
-      expect(toastErrorSpy).toHaveBeenCalledWith("loan not found");
+      expect(toastErrorSpy).toHaveBeenCalledWith("loan not found", { toastId: "generic-error" });
     });
   });
 });

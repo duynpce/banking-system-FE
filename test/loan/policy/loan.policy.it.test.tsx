@@ -190,7 +190,7 @@ describe("loanPolicy integration", () => {
     await user.click(screen.getByRole("button", { name: "Add Policy" }));
 
     await waitFor(() => {
-      expect(toastErrorSpy).toHaveBeenCalledWith("invalid loan type");
+      expect(toastErrorSpy).toHaveBeenCalledWith("invalid loan type", { toastId: "generic-error" });
     });
   });
 });

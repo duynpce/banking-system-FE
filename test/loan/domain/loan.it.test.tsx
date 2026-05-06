@@ -240,7 +240,7 @@ describe("loan integration", () => {
     await user.click(screen.getByRole("button", { name: "Apply Loan" }));
 
     await waitFor(() => {
-      expect(toastErrorSpy).toHaveBeenCalledWith("policy not found");
+      expect(toastErrorSpy).toHaveBeenCalledWith("policy not found", { toastId: "generic-error" });
     });
   });
 });

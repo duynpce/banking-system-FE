@@ -298,7 +298,7 @@ describe("transaction integration", () => {
 		await user.click(screen.getByRole("button", { name: "Create Transaction" }));
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("create transaction failed, receiver account not found");
+			expect(toastErrorSpy).toHaveBeenCalledWith("create transaction failed, receiver account not found", { toastId: "generic-error" });
 		});
 	});
 });

@@ -155,7 +155,7 @@ describe("Card privilege integration", () => {
 		await user.click(screen.getByRole("button", { name: "Create Privilege" }));
 
 		await waitFor(() => {
-			expect(toastErrorSpy).toHaveBeenCalledWith("create card privilege failed");
+			expect(toastErrorSpy).toHaveBeenCalledWith("create card privilege failed", { toastId: "generic-error" });
 		});
 	});
 });
