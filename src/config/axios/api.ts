@@ -135,7 +135,7 @@ api.interceptors.response.use(
         toastId: "timeout-error",
       });  
     }
-    if(axios.isCancel(error)) {
+    else if(axios.isCancel(error)) {
       Promise.reject(error);
     }
     else if (error.code === 'ERR_NETWORK') {

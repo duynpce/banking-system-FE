@@ -28,6 +28,7 @@ export const getLoansByFilter = async (filter: LoanFilter, signal?: AbortSignal)
       "loanType": filter.loanType,
       "startDate": filter.startDate,
       "endDate": filter.endDate,
+      
     },
   });
   return res ?? null;
